@@ -1,8 +1,9 @@
-import { TOGGLE_POPUP } from '../actions/types';
+import { TOGGLE_POPUP_SIGNUP, TOGGLE_POPUP_LOGIN } from '../actions/types';
 
 const initialState = {
-    jumbotron: "not-hidden",
-    modal: "hidden"
+    jumbotron: "",
+    signupmodal: "hidden",
+    loginmodal: "hidden"
 }
 
 export default function(state=initialState, action){
@@ -11,19 +12,34 @@ export default function(state=initialState, action){
         default:
             return state;
 
-        case TOGGLE_POPUP:
-            if ( state.jumbotron ==="not-hidden"){
+        case TOGGLE_POPUP_SIGNUP:
+            if ( state.jumbotron ===""){
                 return{
                     ...state,
                     jumbotron: "hidden",
-                    modal: "not-hidden"
+                    signupmodal: "not-hidden"
                 }
             } else {
                 return{
                     ...state,
-                    jumbotron: "not-hidden",
-                    modal: "hidden" 
+                    jumbotron: "",
+                    signupmodal: "hidden" 
                 }
+            };
+
+        case TOGGLE_POPUP_LOGIN:
+        if ( state.jumbotron ===""){
+            return{
+                ...state,
+                jumbotron: "hidden",
+                loginmodal: "not-hidden"
             }
+        } else {
+            return{
+                ...state,
+                jumbotron: "",
+                loginmodal: "hidden" 
+            }
+        }
     }
 }

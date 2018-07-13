@@ -76,4 +76,13 @@
   display:none;
 }
 
+.not-hidden {
+  animation: modalopen 0.5s;
+}
+
+@keyframes modalopen {
+  from{opacity:0}
+  to {opacity:1}
+}
+
 
