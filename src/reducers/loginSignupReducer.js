@@ -12,7 +12,7 @@ export default function(state=initialState, action){
             return state;
 
         case TOGGLE_POPUP:
-            if ( state.jumbotron =="not-hidden"){
+            if ( state.jumbotron ==="not-hidden"){
                 return{
                     ...state,
                     jumbotron: "hidden",
