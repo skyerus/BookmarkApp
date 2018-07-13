@@ -55,4 +55,25 @@
   font-size: 0.5px;
 }
 
+.modal-bg {
+  background-color: rgba(0, 0, 0, 0.657);
+  z-index: 1;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  overflow:auto;
+}
+
+.modal-content {
+  background-color: #d1d4d6;
+  margin:auto;
+  margin-top: 10%;
+  width: 40%;
+}
+
+.hidden {
+  display:none;
+}
+
 

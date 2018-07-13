@@ -1,20 +1,22 @@
 import React, { Component } from 'react';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
+import store from './store';
 
 import { Provider } from 'react-redux';
 
-import SignUp from './components/SignUp.js';
+import Home from './components/Home';
 
-import store from './store.js';
 
 class App extends Component {
+  handleClick(e){
+    this.props.togglePopup;
+  };
   render() {
     return (
       <Provider store={store}>
-        <div className="App background-img">
-          <p className="xxsmall">`</p>
-          <SignUp />
+        <div>
+          <Home/>
         </div>
       </Provider>
     );
