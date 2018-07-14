@@ -1,10 +1,5 @@
 import React, { Component } from 'react';
 
-import  {connect} from 'react-redux';
-import PropTypes from 'prop-types';
-
-import {togglePopupSignup} from '../actions/loginSignupActions';
-
 class Signup extends Component {
   constructor(props) {
     super(props);
@@ -89,15 +84,4 @@ class Signup extends Component {
   }
 }
 
-Signup.propTypes = {
-  signuppopup: PropTypes.bool,
-  togglePopupSignup: PropTypes.func.isRequired,
-  signupmodal: PropTypes.string
-}
-
-const mapStateToProps = state => ({
-  signuppopup: state.LoginSignup.signuppopup,
-  signupmodal: state.LoginSignup.signupmodal
-})
-
-export default connect(mapStateToProps, {togglePopupSignup})(Signup);
+export default Signup;

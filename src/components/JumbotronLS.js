@@ -1,14 +1,9 @@
 import React, { Component } from 'react';
 
-import  {connect} from 'react-redux';
-import PropTypes from 'prop-types';
-
-import { togglePopupSignup, togglePopupLogin } from '../actions/loginSignupActions'
-
 class JumbotronLS extends Component {
   render() {
     return (
-        <div className= {this.props.jumbotron}>
+      <div className= {this.props.jumbotron}>
         <p className="xxsmall">`</p>
         <div className = "my-jumbotron">
             <h1>Bookmarks</h1>
@@ -18,22 +13,9 @@ class JumbotronLS extends Component {
                 <button className="btn margin-left btn-dark btn-lg" onClick = {this.props.togglePopupSignup}>Sign Up</button>
             </div>
         </div>
-        </div>
+      </div>
     );
   }
 }
 
-JumbotronLS.propTypes = {
-  togglePopupSignup: PropTypes.func.isRequired,
-  togglePopupLogin: PropTypes.func.isRequired,
-  jumbotron: PropTypes.string
-}
-
-const mapStateToProps = state => ({
-  jumbotron: state.LoginSignup.jumbotron,
-  signupmodal: state.LoginSignup.signupmodal,
-  loginmodal: state.LoginSignup.loginmodal,
-})
-
-
-export default connect(mapStateToProps, { togglePopupLogin, togglePopupSignup })(JumbotronLS);
+export default JumbotronLS;
