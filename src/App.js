@@ -5,6 +5,8 @@ import './App.css'
 import  {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
+import Signup from './components/Signup';
+
 import { togglePopupSignup, togglePopupLogin } from './actions/loginSignupActions'
 
 
@@ -14,8 +16,7 @@ class App extends Component {
         <div className="App background-img">
           <div className= {"modal-bg " + this.props.signupmodal}>
             <div className="modal-content">
-              <h1>This is my signup</h1>
-              <p> HELLOOOOOO </p>    
+              <Signup/>
             </div>
           </div>
           <div className= {"modal-bg " + this.props.loginmodal}>

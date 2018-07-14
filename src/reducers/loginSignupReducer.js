@@ -3,7 +3,7 @@ import { TOGGLE_POPUP_SIGNUP, TOGGLE_POPUP_LOGIN } from '../actions/types';
 const initialState = {
     jumbotron: "",
     signupmodal: "hidden",
-    loginmodal: "hidden"
+    loginmodal: "hidden",
 }
 
 export default function(state=initialState, action){
@@ -25,7 +25,7 @@ export default function(state=initialState, action){
                     jumbotron: "",
                     signupmodal: "hidden" 
                 }
-            };
+            }
 
         case TOGGLE_POPUP_LOGIN:
         if ( state.jumbotron ===""){
