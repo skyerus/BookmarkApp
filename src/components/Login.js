@@ -3,16 +3,14 @@ import React, { Component } from 'react';
 import  {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {togglePopupSignup} from '../actions/loginSignupActions';
+import {togglePopupLogin} from '../actions/loginSignupActions';
 
-class Signup extends Component {
+class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: "",
       email: "",
-      password: "",
-      reenterpassword: ""
+      password: ""
     };
 
     this.onChange = this.onChange.bind(this);
@@ -29,7 +27,6 @@ class Signup extends Component {
     e.preventDefault();
 
     const user = {
-      name: this.state.name,
       email: this.state.email,
       password: this.state.password
     };
@@ -50,22 +47,16 @@ class Signup extends Component {
   }
 
   handleClickOutside(event) {
-    if (this.props.signuppopup && this.wrapperRef && !this.wrapperRef.contains(event.target)) {
-      this.props.togglePopupSignup();
+    if (this.props.loginpopup && this.wrapperRef && !this.wrapperRef.contains(event.target)) {
+      this.props.togglePopupLogin();
     }
   }
-
-  
 
   render() {
     return (
       <div className="modal-content" ref={this.setWrapperRef}>
-        <h2> Create your account </h2>
+        <h2> Login </h2>
         <form className="signup-form">
-          <div className="form-group">
-            <label>Name:</label>
-            <input className= "form-control" name= "name" type="text" onChange={this.onChange} value={this.state.name}/>
-          </div>
           <div className="form-group">
             <label>Email:</label>
             <input className= "form-control" name= "email" type="email" onChange={this.onChange} value={this.state.email}/>
@@ -74,26 +65,24 @@ class Signup extends Component {
             <label>Password:</label>
             <input className= "form-control" name= "password" type="password" onChange={this.onChange} value={this.state.password}/>
           </div>
-          <div className="form-group">
-            <label>Re-enter password:</label>
-            <input className= "form-control" name= "reenterpassword" type="password" onChange={this.onChange} value={this.state.reenterpassword}/>
-          </div>
         </form>
         <div className="align-center">
-            <button className="btn btn-primary btn-lg">Sign Up</button>
+            <button className="btn btn-primary btn-lg">Login</button>
         </div>
       </div>
     )
   }
 }
 
-Signup.propTypes = {
-  signuppopup: PropTypes.bool,
-  togglePopupSignup: PropTypes.func.isRequired
+Login.propTypes = {
+  togglePopupLogin: PropTypes.func.isRequired,
+  loginpopup: PropTypes.bool,
 }
 
 const mapStateToProps = state => ({
-  signuppopup: state.LoginSignup.signuppopup
+  loginpopup: state.LoginSignup.loginpopup
 })
 
-export default connect(mapStateToProps, {togglePopupSignup})(Signup);
+export default connect(mapStateToProps, {togglePopupLogin})(Login);
+
+

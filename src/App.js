@@ -6,6 +6,7 @@ import  {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import Signup from './components/Signup';
+import Login from './components/Login'
 
 import { togglePopupSignup, togglePopupLogin } from './actions/loginSignupActions'
 
@@ -15,15 +16,10 @@ class App extends Component {
     return (
         <div className="App background-img">
           <div className= {"modal-bg " + this.props.signupmodal}>
-            <div className="modal-content">
-              <Signup/>
-            </div>
+            <Signup/>
           </div>
           <div className= {"modal-bg " + this.props.loginmodal}>
-            <div className="modal-content">
-              <h1>This is my login modal</h1>
-              <p> HELLOOOOOO </p>    
-            </div>
+            <Login/>  
           </div>
           <div className= {this.props.jumbotron}>
             <p className="xxsmall">`</p>
@@ -45,13 +41,13 @@ App.propTypes = {
   togglePopupSignup: PropTypes.func.isRequired,
   togglePopupLogin: PropTypes.func.isRequired,
   jumbotron: PropTypes.string,
-  modal: PropTypes.string
+  modal: PropTypes.string,
 }
 
 const mapStateToProps = state => ({
   jumbotron: state.LoginSignup.jumbotron,
   signupmodal: state.LoginSignup.signupmodal,
-  loginmodal: state.LoginSignup.loginmodal
+  loginmodal: state.LoginSignup.loginmodal,
 })
 
 

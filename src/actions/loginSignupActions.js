@@ -11,4 +11,3 @@ export const togglePopupLogin = () => dispatch => {
         type: TOGGLE_POPUP_LOGIN
     })
 }
-

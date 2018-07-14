@@ -4,6 +4,8 @@ const initialState = {
     jumbotron: "",
     signupmodal: "hidden",
     loginmodal: "hidden",
+    signuppopup: false,
+    loginpopup: false
 }
 
 export default function(state=initialState, action){
@@ -13,32 +15,36 @@ export default function(state=initialState, action){
             return state;
 
         case TOGGLE_POPUP_SIGNUP:
-            if ( state.jumbotron ===""){
+            if ( state.signuppopup ===false){
                 return{
                     ...state,
                     jumbotron: "hidden",
-                    signupmodal: "not-hidden"
+                    signupmodal: "not-hidden",
+                    signuppopup:true
                 }
             } else {
                 return{
                     ...state,
-                    jumbotron: "",
-                    signupmodal: "hidden" 
+                    jumbotron: "not-hidden",
+                    signupmodal: "hidden",
+                    signuppopup:false
                 }
             }
 
         case TOGGLE_POPUP_LOGIN:
-        if ( state.jumbotron ===""){
+        if ( state.loginpopup ===false){
             return{
                 ...state,
                 jumbotron: "hidden",
-                loginmodal: "not-hidden"
+                loginmodal: "not-hidden",
+                loginpopup:true
             }
         } else {
             return{
                 ...state,
-                jumbotron: "",
-                loginmodal: "hidden" 
+                jumbotron: "not-hidden",
+                loginmodal: "hidden",
+                loginpopup:false 
             }
         }
     }
