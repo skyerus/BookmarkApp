@@ -59,28 +59,30 @@ class Signup extends Component {
 
   render() {
     return (
-      <div className="modal-content" ref={this.setWrapperRef}>
-        <h2> Create your account </h2>
-        <form className="signup-form">
-          <div className="form-group">
-            <label>Name:</label>
-            <input className= "form-control" name= "name" type="text" onChange={this.onChange} value={this.state.name}/>
+      <div className= {"modal-bg " + this.props.signupmodal}>
+        <div className="modal-content" ref={this.setWrapperRef}>
+          <h2> Create your account </h2>
+          <form className="signup-form">
+            <div className="form-group">
+              <label>Name:</label>
+              <input className= "form-control" name= "name" type="text" onChange={this.onChange} value={this.state.name}/>
+            </div>
+            <div className="form-group">
+              <label>Email:</label>
+              <input className= "form-control" name= "email" type="email" onChange={this.onChange} value={this.state.email}/>
+            </div>
+            <div className="form-group">
+              <label>Password:</label>
+              <input className= "form-control" name= "password" type="password" onChange={this.onChange} value={this.state.password}/>
+            </div>
+            <div className="form-group">
+              <label>Re-enter password:</label>
+              <input className= "form-control" name= "reenterpassword" type="password" onChange={this.onChange} value={this.state.reenterpassword}/>
+            </div>
+          </form>
+          <div className="align-center">
+              <button className="btn btn-primary btn-lg">Sign Up</button>
           </div>
-          <div className="form-group">
-            <label>Email:</label>
-            <input className= "form-control" name= "email" type="email" onChange={this.onChange} value={this.state.email}/>
-          </div>
-          <div className="form-group">
-            <label>Password:</label>
-            <input className= "form-control" name= "password" type="password" onChange={this.onChange} value={this.state.password}/>
-          </div>
-          <div className="form-group">
-            <label>Re-enter password:</label>
-            <input className= "form-control" name= "reenterpassword" type="password" onChange={this.onChange} value={this.state.reenterpassword}/>
-          </div>
-        </form>
-        <div className="align-center">
-            <button className="btn btn-primary btn-lg">Sign Up</button>
         </div>
       </div>
     )
@@ -89,11 +91,13 @@ class Signup extends Component {
 
 Signup.propTypes = {
   signuppopup: PropTypes.bool,
-  togglePopupSignup: PropTypes.func.isRequired
+  togglePopupSignup: PropTypes.func.isRequired,
+  signupmodal: PropTypes.string
 }
 
 const mapStateToProps = state => ({
-  signuppopup: state.LoginSignup.signuppopup
+  signuppopup: state.LoginSignup.signuppopup,
+  signupmodal: state.LoginSignup.signupmodal
 })
 
 export default connect(mapStateToProps, {togglePopupSignup})(Signup);

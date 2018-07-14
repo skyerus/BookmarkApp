@@ -54,20 +54,22 @@ class Login extends Component {
 
   render() {
     return (
-      <div className="modal-content" ref={this.setWrapperRef}>
-        <h2> Login </h2>
-        <form className="signup-form">
-          <div className="form-group">
-            <label>Email:</label>
-            <input className= "form-control" name= "email" type="email" onChange={this.onChange} value={this.state.email}/>
+      <div className= {"modal-bg " + this.props.loginmodal}>
+        <div className="modal-content" ref={this.setWrapperRef}>
+          <h2> Login </h2>
+          <form className="signup-form">
+            <div className="form-group">
+              <label>Email:</label>
+              <input className= "form-control" name= "email" type="email" onChange={this.onChange} value={this.state.email}/>
+            </div>
+            <div className="form-group">
+              <label>Password:</label>
+              <input className= "form-control" name= "password" type="password" onChange={this.onChange} value={this.state.password}/>
+            </div>
+          </form>
+          <div className="align-center">
+              <button className="btn btn-primary btn-lg">Login</button>
           </div>
-          <div className="form-group">
-            <label>Password:</label>
-            <input className= "form-control" name= "password" type="password" onChange={this.onChange} value={this.state.password}/>
-          </div>
-        </form>
-        <div className="align-center">
-            <button className="btn btn-primary btn-lg">Login</button>
         </div>
       </div>
     )
@@ -77,10 +79,12 @@ class Login extends Component {
 Login.propTypes = {
   togglePopupLogin: PropTypes.func.isRequired,
   loginpopup: PropTypes.bool,
+  loginmodal: PropTypes.string
 }
 
 const mapStateToProps = state => ({
-  loginpopup: state.LoginSignup.loginpopup
+  loginpopup: state.LoginSignup.loginpopup,
+  loginmodal: state.LoginSignup.loginmodal
 })
 
 export default connect(mapStateToProps, {togglePopupLogin})(Login);
