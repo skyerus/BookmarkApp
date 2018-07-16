@@ -166,6 +166,7 @@ body {
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   position: relative;
+  background-color: rgb(238, 238, 238);
 }
 
 .btn-container {
@@ -176,8 +177,10 @@ body {
 
 .bookmark-element h1 {
   margin: 0;
-  padding-top: 0.5vh;
+  padding-top: 1vh;
   font-size: 33px;
+  border-bottom: rgba(51, 51, 51, 0.308) 1px solid;
+  padding-bottom: 1vh;
 }
 
 .bookmark-element p {
