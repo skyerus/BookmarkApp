@@ -25,7 +25,7 @@ export default class Bookmark extends Component {
         </div>
         <div className="btn-container">
             <button className="go-to-btn">Go to</button>
-            <div className="btn-grid height-zero">
+            <div className={"btn-grid height-zero "+this.props.edit}>
                 <div>
                     <button className="edit-btn">Edit</button>
                 </div>

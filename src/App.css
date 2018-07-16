@@ -101,6 +101,8 @@ body {
 
 .nav-container {
   background-color: #333;
+  border-bottom: #333 2px solid;
+  border-top: #333 2px solid;
 }
 
 .row-nav {
@@ -220,5 +222,32 @@ body {
 }
 
 .height-zero {
-  display:none;
+  height: 0;
+  overflow: hidden;
+  transition: height 0.6s;
+}
+
+.edit-display {
+  height: 3.4vh;
+}
+
+.bookmark-header-container {
+  display:grid;
+  grid-template-columns: repeat(16,1fr);
+}
+
+.title-grid-element {
+  grid-column: 7/11;
+  align-self: center;
+}
+
+.save-grid-btn {
+  grid-column: 16;
+  margin-top: 20%;
+  justify-self: right;
+}
+
+.edit-grid-btn {
+  margin-top: 20%;
+  justify-self: left;
 }

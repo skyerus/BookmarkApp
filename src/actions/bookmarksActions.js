@@ -1,8 +1,14 @@
-import {REORDER_BOOKMARKS} from '../actions/types';
+import {REORDER_BOOKMARKS, TOGGLE_EDIT} from '../actions/types';
 
 export const reorderBookmarks = (newIndex,receivedIndex) => dispatch => {
     dispatch({
         type: REORDER_BOOKMARKS,
         payload: [newIndex,receivedIndex]
+    })
+}
+
+export const toggleEdit = () => dispatch => {
+    dispatch({
+        type: TOGGLE_EDIT
     })
 }
