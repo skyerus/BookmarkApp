@@ -1,13 +1,29 @@
-import React from 'react'
+import React, { Component } from 'react'
 
-export default (props) => {
-  return (
-    <div className="bookmark-element">
+export default class Bookmark extends Component {
+    onDragStart = (ev,index) => {
+        ev.dataTransfer.setData("index",index)
+    }
+
+    onDragOver = (ev) => {
+        ev.preventDefault();
+    }
+
+    onDrop = (ev, newIndex) => {
+        let receivedIndex = ev.dataTransfer.getData("index");
+        this.props.reorderBookmarks(newIndex,receivedIndex)
+        console.log(newIndex)
+        console.log(receivedIndex)
+     }
+
+    render() {
+    return (
+    <div draggable onDragStart = {(e) => this.onDragStart(e, this.props.index)} onDragOver={(e)=>this.onDragOver(e)} onDrop={(e)=>{this.onDrop(e, this.props.index)}} className="bookmark-element" >
         <div className="bookmark-header">
-            <h1>{props.name}</h1>
+            <h1>{this.props.name}</h1>
         </div>
         <div className="bookmark-about">
-            <p>{props.about}</p>
+            <p>{this.props.about}</p>
         </div>
         <div className="btn-container">
             <button className="go-to-btn">Go to</button>
@@ -21,5 +37,6 @@ export default (props) => {
             </div>
         </div>
     </div>
-  )
+    )
+  }
 }
