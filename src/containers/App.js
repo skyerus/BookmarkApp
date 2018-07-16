@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import '../../node_modules/bootstrap/dist/css/bootstrap.min.css'
-import '../App.css'
 
 import  {connect} from 'react-redux';
 import PropTypes from 'prop-types';
@@ -10,26 +8,27 @@ import {togglePopupSignup, togglePopupLogin} from '../actions/loginSignupActions
 import Signup from '../components/Signup';
 import Login from '../components/Login';
 import JumbotronLS from '../components/JumbotronLS';
+import Navbar from '../components/Navbar';
 
 
 class App extends Component {
   render() {
-    return (
-      <div className="App background-img"> 
-        <JumbotronLS jumbotron={this.props.jumbotron} togglePopupSignup={this.props.togglePopupSignup} togglePopupLogin={this.props.togglePopupLogin}/>
-        <Signup signuppopup={this.props.signuppopup} signupmodal={this.props.signupmodal} togglePopupSignup={this.props.togglePopupSignup}/>
-        <Login loginpopup={this.props.loginpopup} loginmodal= {this.props.loginmodal} togglePopupLogin={this.props.togglePopupLogin}/> 
-      </div>
-    );
+    if (!this.props.signuppopup && !this.props.loginpopup){
+      return <div><Navbar/><div className="App background-img"><JumbotronLS jumbotron={this.props.jumbotron} togglePopupSignup={this.props.togglePopupSignup} togglePopupLogin={this.props.togglePopupLogin}/></div></div>
+    } else if (this.props.signuppopup) {
+      return <div><Navbar/><div className="App background-img"><Signup signuppopup={this.props.signuppopup} signupmodal={this.props.signupmodal} togglePopupSignup={this.props.togglePopupSignup}/></div></div>
+    } else {
+      return <div><Navbar/><div className="App background-img"><Login loginpopup={this.props.loginpopup} loginmodal= {this.props.loginmodal} togglePopupLogin={this.props.togglePopupLogin}/></div></div>
+    }
   }
 }
 
 App.propTypes = {
   signuppopup: PropTypes.bool,
+  loginpopup: PropTypes.bool,
   togglePopupSignup: PropTypes.func.isRequired,
   togglePopupLogin: PropTypes.func.isRequired,
   signupmodal: PropTypes.string,
-  loginpopup: PropTypes.bool,
   loginmodal: PropTypes.string,
   jumbotron: PropTypes.string
 }
