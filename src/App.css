@@ -218,3 +218,7 @@ body {
   border-left:  rgba(51, 51, 51, 0.308) 1px solid;
   padding: 0.5vh 0;
 }
+
+.height-zero {
+  display:none;
+}

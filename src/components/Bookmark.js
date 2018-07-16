@@ -12,8 +12,6 @@ export default class Bookmark extends Component {
     onDrop = (ev, newIndex) => {
         let receivedIndex = ev.dataTransfer.getData("index");
         this.props.reorderBookmarks(newIndex,receivedIndex)
-        console.log(newIndex)
-        console.log(receivedIndex)
      }
 
     render() {
@@ -27,7 +25,7 @@ export default class Bookmark extends Component {
         </div>
         <div className="btn-container">
             <button className="go-to-btn">Go to</button>
-            <div className="btn-grid">
+            <div className="btn-grid height-zero">
                 <div>
                     <button className="edit-btn">Edit</button>
                 </div>

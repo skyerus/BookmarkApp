@@ -5,7 +5,7 @@ import Bookmark from './Bookmark';
 export default class Bookmarks extends Component {
   render() {
       const bookmarks = this.props.order.map((order, index) => (
-        <Bookmark name= {this.props.bookmarks[order].title + this.props.bookmarks[order].id} about= "This is a bookmark" reorderBookmarks={this.props.reorderBookmarks} order={order} index={index}/>
+        <Bookmark key={this.props.bookmarks[order].id} name= {this.props.bookmarks[order].title + this.props.bookmarks[order].id} about= "This is a bookmark" reorderBookmarks={this.props.reorderBookmarks} order={order} index={index}/>
       ));
     return (
         <div className="container align-center margin-top min-height grey-container">
