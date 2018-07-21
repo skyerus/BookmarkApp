@@ -56,7 +56,7 @@ class Signup extends Component {
       return <Redirect to = '/home' />
     }
     return (
-      <div className= {"modal-bg " + this.props.signupmodal}>
+      <div className="modal-bg not-hidden">
         <div className="modal-content" ref={this.setWrapperRef}>
           <h2> Create your account </h2>
           <form className="signup-form">
