@@ -1,13 +1,16 @@
 import {TOGGLE_POPUP_SIGNUP,TOGGLE_POPUP_LOGIN} from './types';
 
-export const togglePopupSignup = () => dispatch => {
-    dispatch({
-        type: TOGGLE_POPUP_SIGNUP
-    })
+export function togglePopupSignup(bool) {
+    return {
+        type: TOGGLE_POPUP_SIGNUP,
+        signuppopup: bool
+    }
 }
 
-export const togglePopupLogin = () => dispatch => {
-    dispatch({
-        type: TOGGLE_POPUP_LOGIN
-    })
+export function togglePopupLogin(bool) {
+    return {
+        type: TOGGLE_POPUP_LOGIN,
+        loginpopup: bool
+    }
 }
+

@@ -37,13 +37,13 @@ class Login extends Component {
 
   handleClickOutside(event) {
     if (this.props.loginpopup && this.wrapperRef && !this.wrapperRef.contains(event.target)) {
-      this.props.togglePopupLogin();
+      this.props.togglePopupLogin(false);
     }
   }
 
   render() {
     return (
-      <div className= "modal-bg not-hidden">
+      <div className= "not-hidden">
         <div className="my-modal form-modal" ref={this.setWrapperRef}>
           <h2> Login </h2>
           <form className="signup-form">

@@ -43,7 +43,7 @@ class Signup extends Component {
 
   handleClickOutside(event) {
     if (this.props.signuppopup && this.wrapperRef && !this.wrapperRef.contains(event.target)) {
-      this.props.togglePopupSignup();
+      this.props.togglePopupSignup(false);
     }
   }
 
@@ -51,7 +51,7 @@ class Signup extends Component {
 
   render() {
     return (
-      <div className="modal-bg not-hidden">
+      <div className="not-hidden">
         <div ref={this.setWrapperRef} className="my-modal form-modal">
           <h2>Create your account</h2>
           <form className="signup-form">

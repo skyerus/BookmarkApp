@@ -1,4 +1,4 @@
-import { LOGIN_HAS_ERRORED,LOGIN_IS_LOADING, LOGIN_SUCCESS,LOGOUT_HAS_ERRORED,LOGOUT_IS_LOADING,LOGOUT_SUCCESS, SIGNUP_HAS_ERRORED, SIGNUP_IS_LOADING } from './types';
+import { RELOGIN,LOGIN_HAS_ERRORED,LOGIN_IS_LOADING, LOGIN_SUCCESS,LOGOUT_HAS_ERRORED,LOGOUT_IS_LOADING,LOGOUT_SUCCESS, SIGNUP_HAS_ERRORED, SIGNUP_IS_LOADING, JUST_SIGNED_UP} from './types';
 
 export function loginHasErrored(bool) {
     return {
@@ -21,6 +21,12 @@ export function loginSuccess(username) {
     };
 }
 
+export function relogin() {
+    return {
+        type: RELOGIN,
+    }
+}
+
 export function login(u,pw) {
     return (dispatch) => {
         dispatch(loginIsLoading(true));
@@ -40,7 +46,6 @@ export function login(u,pw) {
                     throw Error(response.statusText);
                 }
                 dispatch(loginIsLoading(false));
-
                 return u;
             })
             .then((u) => dispatch(loginSuccess(u)))
@@ -105,6 +110,13 @@ export function signUpIsLoading(bool) {
     };
 }
 
+export function toggleJustSignedUp(bool){
+    return {
+        type: JUST_SIGNED_UP,
+        justSignedUp: bool
+    }
+}
+
 export function signUp(u,em,pw) {
     return (dispatch) => {
         dispatch(signUpIsLoading(true));
@@ -126,6 +138,7 @@ export function signUp(u,em,pw) {
                 throw Error(response.statusText);
             }
             dispatch(signUpIsLoading(false));
+            dispatch(toggleJustSignedUp(true));
             return u;
         })
         .then((u)=> dispatch(loginSuccess(u)))

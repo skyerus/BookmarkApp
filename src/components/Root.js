@@ -12,7 +12,7 @@ const Root = () => (
     <Router>
       <Switch>
         <Route exact path="/" component={App} />
-        <Route path="/home" component={Home}/>
+        <Route path="/bookmarks" component={Home}/>
       </Switch>
     </Router>
   </Provider>

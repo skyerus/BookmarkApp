@@ -4,21 +4,15 @@ import  {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {reorderBookmarks,toggleEdit} from '../actions/bookmarksActions';
-import {logout,login} from '../actions/loginSignUpActions';
 
-import Navbar from '../components/Navbar';
+import Navbar from '../containers/Navbar';
 import Bookmarks from '../components/Bookmarks';
 
 class Home extends Component {
   render() {
     return (
-      <div>
-        <Navbar 
-          isLoggedIn={this.props.isLoggedIn} 
-          logout={this.props.logout} 
-          login={this.props.login} 
-          loginPopup={this.props.loginpopup}
-        />
+      <div className="App background-img">
+        <Navbar/>
         <Bookmarks 
           edit = {this.props.edit} 
           toggleEdit = {this.props.toggleEdit} 
@@ -34,11 +28,10 @@ class Home extends Component {
 Home.propTypes = {
   bookmarks: PropTypes.array,
   reorderBookmarks: PropTypes.func.isRequired,
+  toggleEdit: PropTypes.func.isRequired,
   order: PropTypes.array,
   edit: PropTypes.string,
-  isLoggedIn: PropTypes.bool,
-  logout: PropTypes.func.isRequired,
-  login: PropTypes.func.isRequired
+  isLoggedIn: PropTypes.bool
 }
 
 const mapStateToProps = state => ({
@@ -48,4 +41,4 @@ const mapStateToProps = state => ({
   isLoggedIn: state.Login.isLoggedIn
 })
 
-export default connect(mapStateToProps,{reorderBookmarks,toggleEdit,logout, login})(Home)
+export default connect(mapStateToProps,{reorderBookmarks,toggleEdit})(Home)

@@ -12,29 +12,15 @@ export default function(state=initialState, action){
             return state;
 
         case TOGGLE_POPUP_SIGNUP:
-            if ( state.signuppopup ===false){
-                return{
-                    ...state,
-                    signuppopup:true
-                }
-            } else {
-                return{
-                    ...state,
-                    signuppopup:false
-                }
+            return {
+                ...state,
+                signuppopup: action.signuppopup
             }
 
         case TOGGLE_POPUP_LOGIN:
-        if ( state.loginpopup ===false){
-            return{
+            return {
                 ...state,
-                loginpopup:true
+                loginpopup: action.loginpopup
             }
-        } else {
-            return{
-                ...state,
-                loginpopup:false 
-            }
-        }
     }
 }

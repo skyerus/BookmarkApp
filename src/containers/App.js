@@ -5,15 +5,22 @@ import PropTypes from 'prop-types';
 import {Redirect} from 'react-router-dom';
 
 import {togglePopupSignup, togglePopupLogin} from '../actions/loginSignupModalActions';
-import {login, signUp} from '../actions/loginSignUpActions';
+import {login, signUp, toggleJustSignedUp,relogin} from '../actions/loginSignUpActions';
 
 import Signup from '../components/Signup';
 import Login from '../components/Login';
-import JumbotronLS from '../components/ModalLS';
-import Navbar from '../components/Navbar';
-
+import ModalLS from '../components/ModalLS';
+import Navbar from '../containers/Navbar';
+import WelcomePage from '../components/WelcomePage';
 
 class App extends Component {
+
+  componentDidMount() {
+    if (!this.props.isLoggedIn && document.cookie.length > 0) {
+      this.props.relogin();
+    }
+  }
+  
   render() {
     if (this.props.redirect) {
       return <Redirect to = '/home' />
@@ -21,19 +28,31 @@ class App extends Component {
     let welcome;
 
     // Decides which modal to present based on current state
-    if (!this.props.signuppopup && !this.props.loginpopup){
+    if (this.props.justSignedUp || this.props.isLoggedIn){
+      welcome =
+      <WelcomePage 
+        isLoggedIn={this.props.isLoggedIn} 
+        toggleJustSignedUp={this.props.toggleJustSignedUp}
+        justSignedUp={this.props.justSignedUp}
+        togglePopupLogin = {this.props.togglePopupLogin}
+        togglePopupSignup= {this.props.togglePopupSignup}
+        loginPopup={this.props.loginPopup}
+        signupPopup={this.props.signupPopup}
+        username={this.props.username}
+      />
+    } else if (!this.props.signupPopup && !this.props.loginPopup){
       welcome = 
-      <JumbotronLS 
+      <ModalLS 
         togglePopupSignup={this.props.togglePopupSignup}
         togglePopupLogin={this.props.togglePopupLogin}
       />
-    } else if (this.props.signuppopup) {
+    } else if (this.props.signupPopup) {
       welcome = 
       <Signup 
         isLoading= {this.props.signUpIsLoading} 
         hasErrored={this.props.signUpHasErrored} 
         signUp={this.props.signUp} 
-        signuppopup={this.props.signuppopup}  
+        signuppopup={this.props.signupPopup}  
         togglePopupSignup={this.props.togglePopupSignup}
       />
     } else {
@@ -42,23 +61,19 @@ class App extends Component {
         isLoading= {this.props.loginIsLoading} 
         hasErrored={this.props.loginHasErrored}  
         login={this.props.login} 
-        loginpopup={this.props.loginpopup} 
+        loginpopup={this.props.loginPopup} 
         togglePopupLogin={this.props.togglePopupLogin}
       />
 
     }
-    return <div>
-              <Navbar 
-                isLoggedIn={this.props.isLoggedIn} 
-                logout={this.props.logout} 
-                togglePopupLogin={this.props.togglePopupLogin}
-                loginPopup={this.props.loginpopup}
-                />
-              <div className="App background-img">
-                {welcome}
-            </div>
-          </div>
-
+    return (
+      <div className="App background-img">
+          <Navbar/>
+        <div className={(this.props.signupPopup || this.props.loginPopup) ? "modal-bg not-hidden" : null}>
+          {welcome}
+        </div>
+      </div>
+      )
   }
 }
 
@@ -74,20 +89,24 @@ App.propTypes = {
   redirectLogin: PropTypes.bool,
   loginIsLoading: PropTypes.bool,
   signUpHasErrored: PropTypes.bool,
-  signUpIsLoading: PropTypes.bool
+  signUpIsLoading: PropTypes.bool,
+  toggleJustSignedUp: PropTypes.func.isRequired,
+  justSignedUp: PropTypes.bool,
+  justLoggedIn: PropTypes.bool
 }
 
 const mapStateToProps = state => ({
-  signuppopup: state.LoginSignupModal.signuppopup,
-  loginpopup: state.LoginSignupModal.loginpopup,
+  signupPopup: state.LoginSignupModal.signuppopup,
+  loginPopup: state.LoginSignupModal.loginpopup,
   username: state.Login.username,
   isLoggedIn: state.Login.isLoggedIn,
   loginHasErrored: state.Login.loginHasErrored,
   redirectLogin: state.Login.redirectLogin,
   loginIsLoading: state.Login.loginIsLoading,
   signUpHasErrored: state.SignUp.signUpHasErrored,
-  signUpIsLoading: state.SignUp.signUpIsLoading
+  signUpIsLoading: state.SignUp.signUpIsLoading,
+  justSignedUp: state.SignUp.justSignedUp
 })
 
-export default connect(mapStateToProps, {togglePopupSignup, togglePopupLogin, login, signUp})(App);
+export default connect(mapStateToProps, {togglePopupSignup, togglePopupLogin, login, signUp,relogin, toggleJustSignedUp})(App);
 
