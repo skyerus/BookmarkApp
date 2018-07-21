@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
+import {Redirect} from 'react-router-dom';
 
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "",
+      username: "",
       password: ""
     };
 
     this.onChange = this.onChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
     this.setWrapperRef = this.setWrapperRef.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
   }
@@ -18,15 +19,9 @@ class Login extends Component {
     this.setState( {[e.target.name]: e.target.value })
   }
 
-  onSubmit(e) {
+  handleSubmit(e) {
     e.preventDefault();
-
-    const user = {
-      email: this.state.email,
-      password: this.state.password
-    };
-
-    this.props.createPost(user);
+    this.props.login(this.state.username,this.state.password)
   }
 
   componentDidMount() {
@@ -48,14 +43,17 @@ class Login extends Component {
   }
 
   render() {
+    if (this.props.redirect) {
+      return <Redirect to = '/home' />
+    }
     return (
       <div className= {"modal-bg " + this.props.loginmodal}>
         <div className="modal-content" ref={this.setWrapperRef}>
           <h2> Login </h2>
           <form className="signup-form">
             <div className="form-group">
-              <label>Email:</label>
-              <input className= "form-control" name= "email" type="email" onChange={this.onChange} value={this.state.email}/>
+              <label>Username:</label>
+              <input className= "form-control" name= "username" type="text" onChange={this.onChange} value={this.state.username}/>
             </div>
             <div className="form-group">
               <label>Password:</label>
@@ -63,7 +61,7 @@ class Login extends Component {
             </div>
           </form>
           <div className="align-center">
-              <button className="btn btn-primary btn-lg">Login</button>
+              <button className="btn btn-primary btn-lg" onClick={this.handleSubmit}>Login</button>
           </div>
         </div>
       </div>

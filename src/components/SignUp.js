@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
+import {Redirect} from 'react-router-dom';
 
 class Signup extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: "",
+      username: "",
       email: "",
       password: "",
       reenterpassword: ""
     };
 
     this.onChange = this.onChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
     this.setWrapperRef = this.setWrapperRef.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
   }
@@ -20,16 +21,13 @@ class Signup extends Component {
     this.setState( {[e.target.name]: e.target.value })
   }
 
-  onSubmit(e) {
+  handleSubmit(e) {
     e.preventDefault();
 
-    const user = {
-      name: this.state.name,
-      email: this.state.email,
-      password: this.state.password
-    };
-
-    this.props.createPost(user);
+    if (this.state.password!==this.state.reenterpassword){
+      return
+    }
+    this.props.signUp(this.state.username,this.state.email,this.state.password)
   }
 
   componentDidMount() {
@@ -53,14 +51,18 @@ class Signup extends Component {
   
 
   render() {
+    if (this.props.redirect) {
+      console.log("Hello")
+      return <Redirect to = '/home' />
+    }
     return (
       <div className= {"modal-bg " + this.props.signupmodal}>
         <div className="modal-content" ref={this.setWrapperRef}>
           <h2> Create your account </h2>
           <form className="signup-form">
             <div className="form-group">
-              <label>Name:</label>
-              <input className= "form-control" name= "name" type="text" onChange={this.onChange} value={this.state.name}/>
+              <label>Username:</label>
+              <input className= "form-control" name= "username" type="text" onChange={this.onChange} value={this.state.username}/>
             </div>
             <div className="form-group">
               <label>Email:</label>
@@ -76,7 +78,7 @@ class Signup extends Component {
             </div>
           </form>
           <div className="align-center">
-              <button className="btn btn-primary btn-lg">Sign Up</button>
+              <input type="submit" className="btn btn-primary btn-lg" value="Submit" onClick={this.handleSubmit} />
           </div>
         </div>
       </div>

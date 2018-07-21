@@ -1,4 +1,4 @@
-import {REORDER_BOOKMARKS, TOGGLE_EDIT} from '../actions/types';
+import {REORDER_BOOKMARKS, TOGGLE_EDIT} from './types';
 
 export const reorderBookmarks = (newIndex,receivedIndex) => dispatch => {
     dispatch({
