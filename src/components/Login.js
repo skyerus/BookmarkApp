@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import {Redirect} from 'react-router-dom';
 
 class Login extends Component {
   constructor(props) {
@@ -43,12 +42,9 @@ class Login extends Component {
   }
 
   render() {
-    if (this.props.redirect) {
-      return <Redirect to = '/home' />
-    }
     return (
-      <div className= {"modal-bg " + this.props.loginmodal}>
-        <div className="modal-content" ref={this.setWrapperRef}>
+      <div className= "modal-bg not-hidden">
+        <div className="my-modal form-modal" ref={this.setWrapperRef}>
           <h2> Login </h2>
           <form className="signup-form">
             <div className="form-group">

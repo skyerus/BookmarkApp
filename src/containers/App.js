@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import  {connect} from 'react-redux';
 import PropTypes from 'prop-types';
+import {Redirect} from 'react-router-dom';
 
 import {togglePopupSignup, togglePopupLogin} from '../actions/loginSignupModalActions';
 import {login, signUp} from '../actions/loginSignUpActions';
@@ -14,6 +15,9 @@ import Navbar from '../components/Navbar';
 
 class App extends Component {
   render() {
+    if (this.props.redirect) {
+      return <Redirect to = '/home' />
+    }
     if (!this.props.signuppopup && !this.props.loginpopup){
       return <div><Navbar/><div className="App background-img">
       <JumbotronLS 
@@ -23,27 +27,19 @@ class App extends Component {
     } else if (this.props.signuppopup) {
       return <div><Navbar/><div className="App background-img">
       <Signup 
-        redirect={this.props.redirectLogin} 
         isLoading= {this.props.signUpIsLoading} 
         hasErrored={this.props.signUpHasErrored} 
-        username={this.props.username} 
-        isLoggedIn={this.props.isLoggedIn}
         signUp={this.props.signUp} 
-        signuppopup={this.props.signuppopup} 
-        signupmodal={this.props.signupmodal} 
+        signuppopup={this.props.signuppopup}  
         togglePopupSignup={this.props.togglePopupSignup}
       /></div></div>
     } else {
       return <div><Navbar/><div className="App background-img">
       <Login 
         isLoading= {this.props.loginIsLoading} 
-        redirect={this.props.redirectLogin} 
-        hasErrored={this.props.loginHasErrored} 
-        username={this.props.username} 
-        isLoggedIn={this.props.isLoggedIn} 
+        hasErrored={this.props.loginHasErrored}  
         login={this.props.login} 
         loginpopup={this.props.loginpopup} 
-        loginmodal= {this.props.loginmodal} 
         togglePopupLogin={this.props.togglePopupLogin}
       /></div></div>
     }
@@ -55,8 +51,6 @@ App.propTypes = {
   loginpopup: PropTypes.bool,
   togglePopupSignup: PropTypes.func.isRequired,
   togglePopupLogin: PropTypes.func.isRequired,
-  signupmodal: PropTypes.string,
-  loginmodal: PropTypes.string,
   login: PropTypes.func.isRequired,
   signUp: PropTypes.func.isRequired,
   isLoggedIn: PropTypes.bool,
@@ -69,9 +63,7 @@ App.propTypes = {
 
 const mapStateToProps = state => ({
   signuppopup: state.LoginSignupModal.signuppopup,
-  signupmodal: state.LoginSignupModal.signupmodal,
   loginpopup: state.LoginSignupModal.loginpopup,
-  loginmodal: state.LoginSignupModal.loginmodal,
   username: state.Login.username,
   isLoggedIn: state.Login.isLoggedIn,
   loginHasErrored: state.Login.loginHasErrored,
