@@ -4,25 +4,16 @@ import  {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {reorderBookmarks,toggleEdit} from '../actions/bookmarksActions';
-import {logout} from '../actions/loginSignUpActions';
+import {logout,login} from '../actions/loginSignUpActions';
 
 import Navbar from '../components/Navbar';
-import LoggedInNavbar from '../components/LoggedInNavbar';
 import Bookmarks from '../components/Bookmarks';
-
-function WhichNavbar(props){
-  if (props.isLoggedIn){
-    return <LoggedInNavbar logout={props.logout} isLoggedIn={props.isLoggedIn}/>;
-  } else {
-    return <Navbar/>;
-  }
-}
 
 class Home extends Component {
   render() {
     return (
       <div>
-        <WhichNavbar isLoggedIn={this.props.isLoggedIn} logout={this.props.logout}/>
+        <Navbar isLoggedIn={this.props.isLoggedIn} logout={this.props.logout} login={this.props.login}/>
         <Bookmarks edit = {this.props.edit} toggleEdit = {this.props.toggleEdit} bookmarks = {this.props.bookmarks} reorderBookmarks={this.props.reorderBookmarks} order= {this.props.order}/>
       </div>
     )
@@ -35,7 +26,8 @@ Home.propTypes = {
   order: PropTypes.array,
   edit: PropTypes.string,
   isLoggedIn: PropTypes.bool,
-  logout: PropTypes.func.isRequired
+  logout: PropTypes.func.isRequired,
+  login: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
@@ -45,4 +37,4 @@ const mapStateToProps = state => ({
   isLoggedIn: state.Login.isLoggedIn
 })
 
-export default connect(mapStateToProps,{reorderBookmarks,toggleEdit,logout})(Home)
+export default connect(mapStateToProps,{reorderBookmarks,toggleEdit,logout, login})(Home)

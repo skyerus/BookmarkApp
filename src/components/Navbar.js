@@ -2,7 +2,7 @@ import React from 'react'
 
 import {NavLink} from 'react-router-dom';
 
-export default () => {
+export default (props) => {
   return (
     <div className="nav-container">
         <div className="container">
@@ -19,6 +19,11 @@ export default () => {
                 <NavLink to="/home" activeClassName="selected" className="row-nav-item">
                     FAQs
                 </NavLink>
+                {props.isLoggedIn ? <button className="row-nav-item end-nav-item" onClick={props.logout}>
+                    Logout
+                </button> : <button className="row-nav-item end-nav-item" onClick={props.togglePopupLogin}>
+                    Login
+                </button> }
             </ul>
         </div>
     </div>

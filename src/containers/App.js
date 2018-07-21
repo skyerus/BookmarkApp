@@ -18,31 +18,46 @@ class App extends Component {
     if (this.props.redirect) {
       return <Redirect to = '/home' />
     }
+    let welcome;
+
+    // Decides which modal to present
     if (!this.props.signuppopup && !this.props.loginpopup){
-      return <div><Navbar/><div className="App background-img">
+      welcome = 
       <JumbotronLS 
         togglePopupSignup={this.props.togglePopupSignup}
         togglePopupLogin={this.props.togglePopupLogin}
-      /></div></div>
+      />
     } else if (this.props.signuppopup) {
-      return <div><Navbar/><div className="App background-img">
+      welcome = 
       <Signup 
         isLoading= {this.props.signUpIsLoading} 
         hasErrored={this.props.signUpHasErrored} 
         signUp={this.props.signUp} 
         signuppopup={this.props.signuppopup}  
         togglePopupSignup={this.props.togglePopupSignup}
-      /></div></div>
+      />
     } else {
-      return <div><Navbar/><div className="App background-img">
+      welcome =
       <Login 
         isLoading= {this.props.loginIsLoading} 
         hasErrored={this.props.loginHasErrored}  
         login={this.props.login} 
         loginpopup={this.props.loginpopup} 
         togglePopupLogin={this.props.togglePopupLogin}
-      /></div></div>
+      />
+
     }
+    return <div>
+              <Navbar 
+                isLoggedIn={this.props.isLoggedIn} 
+                logout={this.props.logout} 
+                togglePopupLogin={this.props.togglePopupLogin}
+                />
+              <div className="App background-img">
+                {welcome}
+            </div>
+          </div>
+
   }
 }
 

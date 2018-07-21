@@ -7,6 +7,7 @@ body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
+button:focus {outline:0;}
 
 .background-img {
   background: url("./img/books.png");
