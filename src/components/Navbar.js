@@ -21,9 +21,9 @@ export default (props) => {
                 </NavLink>
                 {props.isLoggedIn ? <button className="row-nav-item end-nav-item" onClick={props.logout}>
                     Logout
-                </button> : <button className="row-nav-item end-nav-item" onClick={props.togglePopupLogin}>
+                </button> : !props.loginPopup ? <button className="row-nav-item end-nav-item" onClick={props.togglePopupLogin}>
                     Login
-                </button> }
+                </button> : null }
             </ul>
         </div>
     </div>

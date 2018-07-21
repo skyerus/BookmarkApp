@@ -13,8 +13,19 @@ class Home extends Component {
   render() {
     return (
       <div>
-        <Navbar isLoggedIn={this.props.isLoggedIn} logout={this.props.logout} login={this.props.login}/>
-        <Bookmarks edit = {this.props.edit} toggleEdit = {this.props.toggleEdit} bookmarks = {this.props.bookmarks} reorderBookmarks={this.props.reorderBookmarks} order= {this.props.order}/>
+        <Navbar 
+          isLoggedIn={this.props.isLoggedIn} 
+          logout={this.props.logout} 
+          login={this.props.login} 
+          loginPopup={this.props.loginpopup}
+        />
+        <Bookmarks 
+          edit = {this.props.edit} 
+          toggleEdit = {this.props.toggleEdit} 
+          bookmarks = {this.props.bookmarks} 
+          reorderBookmarks={this.props.reorderBookmarks} 
+          order= {this.props.order}
+        />
       </div>
     )
   }

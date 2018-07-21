@@ -20,7 +20,7 @@ class App extends Component {
     }
     let welcome;
 
-    // Decides which modal to present
+    // Decides which modal to present based on current state
     if (!this.props.signuppopup && !this.props.loginpopup){
       welcome = 
       <JumbotronLS 
@@ -52,6 +52,7 @@ class App extends Component {
                 isLoggedIn={this.props.isLoggedIn} 
                 logout={this.props.logout} 
                 togglePopupLogin={this.props.togglePopupLogin}
+                loginPopup={this.props.loginpopup}
                 />
               <div className="App background-img">
                 {welcome}
