@@ -17,14 +17,14 @@ export default class Bookmarks extends Component {
         />
       ));
     return (
-        <div className="my-container min-height my-modal bookmarks-modal">
+        <div className="my-container min-height my-modal bookmarks-modal not-hidden">
             <div className="bookmark-header-container">
                 <div className="left-grid-btn"><button className="btn btn-dark" onClick={this.props.toggleEdit}>Edit</button></div>
                 <div className="title-grid-element"><h1 className="padding-top-h1">Bookmarks</h1></div>
                 <div className="save-grid-btn"><button className="btn btn-dark">Save</button></div>
             </div>
             <div className="bookmark-grid">
-                <AddBookmark/>
+                <AddBookmark toggleNewBookmarkPopup={this.props.toggleNewBookmarkPopup}/>
                 {bookmarks}
             </div>
         </div>

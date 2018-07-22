@@ -49,7 +49,7 @@ class App extends Component {
     } else if (this.props.signupPopup) {
       welcome = 
       <Signup 
-        isLoading= {this.props.signUpIsLoading} 
+        signUpIsLoading= {this.props.signUpIsLoading} 
         hasErrored={this.props.signUpHasErrored} 
         signUp={this.props.signUp} 
         signuppopup={this.props.signupPopup}  

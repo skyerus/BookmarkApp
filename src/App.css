@@ -232,13 +232,13 @@ button:focus {outline:0;}
 }
 
 .height-zero {
-  height: 0;
+  max-height: 0;
   overflow: hidden;
-  transition: height 0.6s;
+  transition: max-height 0.6s;
 }
 
 .edit-display {
-  height: 3.4vh;
+  max-height:5vh;
 }
 
 .bookmark-header-container {
@@ -324,10 +324,27 @@ button:focus {outline:0;}
   max-width: 80%;
   max-height: 80%;
   vertical-align: middle;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 .plus-container {
   width: 100px;
   margin:auto;
   margin-top: 5.5vh;
+}
+
+.small-italics {
+  font-size: 13px;
+}
+
+.align-right {
+  text-align: right;
+}
+
+.display-block {
+  display: block;
 }

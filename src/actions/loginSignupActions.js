@@ -90,6 +90,7 @@ export function logout() {
                 if (!response.ok) {
                     throw Error(response.statusText);
                 }
+                dispatch(toggleJustSignedUp(false));
                 dispatch(logoutIsLoading(false));
             }).then(()=>{
                 dispatch(logoutSuccess());
@@ -107,7 +108,7 @@ export function signUpHasErrored(bool) {
 export function signUpIsLoading(bool) {
     return {
         type: SIGNUP_IS_LOADING,
-        loginIsLoading: bool
+        signUpIsLoading: bool
     };
 }
 

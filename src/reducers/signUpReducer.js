@@ -15,13 +15,13 @@ export default function(state=initialState, action){
         case SIGNUP_IS_LOADING:
             return {
                 ...state,
-                signUpIsLoading: true
+                signUpIsLoading: action.signUpIsLoading
             }
 
         case SIGNUP_HAS_ERRORED:
             return {
                 ...state,
-                signUpHasErrored: true
+                signUpHasErrored: action.hasErrored
             }
 
         case JUST_SIGNED_UP:

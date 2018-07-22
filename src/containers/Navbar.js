@@ -21,12 +21,6 @@ class Navbar extends Component  {
                     <NavLink to="/bookmarks" activeClassName="active-link" className="row-nav-item">
                         Bookmarks
                     </NavLink>
-                    <NavLink to="/" activeClassName="selected" className="row-nav-item">
-                        Prices
-                    </NavLink>
-                    <NavLink to="/" activeClassName="selected" className="row-nav-item">
-                        FAQs
-                    </NavLink>
                     {this.props.isLoggedIn ? 
                         null 
                         : !this.props.signupPopup ? 

@@ -1,4 +1,4 @@
-import {REORDER_BOOKMARKS, TOGGLE_EDIT} from '../actions/types';
+import {REORDER_BOOKMARKS, TOGGLE_EDIT, NEW_BOOKMARK_POPUP} from '../actions/types';
 
 const initialState = {
     bookmarks: [
@@ -24,7 +24,8 @@ const initialState = {
         }
     ],
     order: [2,3,0,1,4],
-    edit: ""
+    edit: "",
+    newBookmarkPopup: false
 }
 
 function reorderIndex(newIndex,receivedIndex,state) {
@@ -89,6 +90,12 @@ export default function(state = initialState, action) {
                     ...state,
                     edit:"edit-display"
                 }
+            }
+
+        case NEW_BOOKMARK_POPUP:
+            return {
+                ...state,
+                newBookmarkPopup: action.newBookmarkPopup
             }
             
 

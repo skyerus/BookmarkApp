@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import MyButton from './MyButton';
+
 class Signup extends Component {
   constructor(props) {
     super(props);
@@ -73,7 +75,7 @@ class Signup extends Component {
             </div>
           </form>
           <div className="align-center">
-              <input type="submit" className="btn btn-primary btn-lg" value="Submit" onClick={this.handleSubmit} />
+            <MyButton myStyle="btn btn-primary btn-lg fixed-size" text="Sign up" onClick={this.handleSubmit} isLoading={this.props.signUpIsLoading}/>
           </div>
         </div>
       </div>
