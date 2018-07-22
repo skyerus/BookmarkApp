@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 
 import Bookmark from './Bookmark';
 import AddBookmark from './AddBookmark';
+import AddCategory from './AddCategory';
 
 export default class Bookmarks extends Component {
   render() {
@@ -26,6 +27,7 @@ export default class Bookmarks extends Component {
             </div>
             <div className="bookmark-grid">
                 <AddBookmark/>
+                <AddCategory/>
                 {bookmarks}
             </div>
         </div>
