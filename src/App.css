@@ -243,21 +243,21 @@ button:focus {outline:0;}
 
 .bookmark-header-container {
   display:grid;
-  grid-template-columns: repeat(16,1fr);
+  grid-template-columns: repeat(12,1fr);
 }
 
 .title-grid-element {
-  grid-column: 7/11;
+  grid-column: 5/9;
   align-self: center;
 }
 
 .save-grid-btn {
-  grid-column: 16;
+  grid-column: 12;
   margin-top: 20%;
   justify-self: right;
 }
 
-.edit-grid-btn {
+.left-grid-btn {
   margin-top: 20%;
   justify-self: left;
 }
@@ -267,4 +267,59 @@ button:focus {outline:0;}
   border: rgba(51, 51, 51, 0.445) 1px solid;
   padding: 0 0.5vh 0.5vh 0.5vh;
   border-radius: 5px;
+  background-color: rgba(226, 227, 228, 0.746);
+}
+
+.spinner-1 {
+  /* content: ""; */
+  /* box-sizing: border-box; */
+  position: relative;
+  top: 50%;
+  left: 50%;
+  height: 30px;
+  width: 30px;
+  margin: 0 0 0 -15px;
+  border-radius: 50%;
+  border: 2px solid rgb(19, 78, 155);
+  border-top-color: #fff;
+  animation: spinner 0.7s linear infinite;
+}
+
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.fixed-size {
+  width: 10vh;
+  height: 5vh;
+}
+
+.border-bottom-plus {
+  border-bottom: rgba(51, 51, 51, 0.308) 0.1vh solid;
+}
+
+.plus-header {
+  border-bottom: none;
+}
+
+.nested-grid {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 1vh;
+}
+
+.nested-bookmark-element {
+  border: 1px solid rgb(255, 255, 255);
+  border-radius: 5px;
+}
+
+.nested-bookmark-element h1 {
+  padding: 0;
+  margin: 0;
+}
+
+.plus-img {
+  padding-bottom: 0.5vh;
 }

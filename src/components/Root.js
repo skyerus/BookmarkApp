@@ -2,20 +2,26 @@ import React from 'react'
 
 import { Provider } from 'react-redux'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { PersistGate } from 'redux-persist/lib/integration/react';
 
-import store from '../store';
+import {persistor,store} from '../store';
+
 import App from '../containers/App';
 import Home from '../containers/Home';
 
-const Root = () => (
+const Root = () => {
+  return (
   <Provider store={store}>
-    <Router>
-      <Switch>
-        <Route exact path="/" component={App} />
-        <Route path="/bookmarks" component={Home}/>
-      </Switch>
-    </Router>
+    <PersistGate loading={null} persistor={persistor}>
+      <Router>
+        <Switch>
+          <Route exact path="/" component={App} />
+          <Route path="/bookmarks" component={Home}/>
+        </Switch>
+      </Router>
+    </PersistGate>
   </Provider>
-);
+  );
+};
 
 export default Root

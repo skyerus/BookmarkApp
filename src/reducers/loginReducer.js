@@ -1,4 +1,4 @@
-import { LOGIN_HAS_ERRORED,LOGIN_IS_LOADING, LOGIN_SUCCESS, LOGOUT_HAS_ERRORED, LOGOUT_IS_LOADING, LOGOUT_SUCCESS, RELOGIN } from '../actions/types';
+import { LOGIN_HAS_EXPIRED,LOGIN_HAS_ERRORED,LOGIN_IS_LOADING, LOGIN_SUCCESS, LOGOUT_HAS_ERRORED, LOGOUT_IS_LOADING, LOGOUT_SUCCESS } from '../actions/types';
 
 const initialState = {
     isLoggedIn:false,
@@ -24,10 +24,12 @@ export default function(state=initialState, action){
                 redirectLogin: true
             }
 
-        case RELOGIN:
+        case LOGIN_HAS_EXPIRED:
             return {
                 ...state,
-                isLoggedIn:true
+                username: "",
+                isLoggedIn:false,
+                redirectLogin: false
             }
 
         case LOGIN_IS_LOADING:

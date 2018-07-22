@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import {Redirect} from 'react-router-dom';
 
 import {togglePopupSignup, togglePopupLogin} from '../actions/loginSignupModalActions';
-import {login, signUp, toggleJustSignedUp,relogin} from '../actions/loginSignUpActions';
+import {login, signUp, toggleJustSignedUp, loginHasExpired} from '../actions/loginSignUpActions';
 
 import Signup from '../components/Signup';
 import Login from '../components/Login';
@@ -16,8 +16,8 @@ import WelcomePage from '../components/WelcomePage';
 class App extends Component {
 
   componentDidMount() {
-    if (!this.props.isLoggedIn && document.cookie.length > 0) {
-      this.props.relogin();
+    if (this.props.isLoggedIn && document.cookie.length === 0) {
+      this.props.loginHasExpired()
     }
   }
   
@@ -63,6 +63,7 @@ class App extends Component {
         login={this.props.login} 
         loginpopup={this.props.loginPopup} 
         togglePopupLogin={this.props.togglePopupLogin}
+        loginIsLoading={this.props.loginIsLoading}
       />
 
     }
@@ -92,7 +93,8 @@ App.propTypes = {
   signUpIsLoading: PropTypes.bool,
   toggleJustSignedUp: PropTypes.func.isRequired,
   justSignedUp: PropTypes.bool,
-  justLoggedIn: PropTypes.bool
+  justLoggedIn: PropTypes.bool,
+  loginHasExpired: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
@@ -108,5 +110,5 @@ const mapStateToProps = state => ({
   justSignedUp: state.SignUp.justSignedUp
 })
 
-export default connect(mapStateToProps, {togglePopupSignup, togglePopupLogin, login, signUp,relogin, toggleJustSignedUp})(App);
+export default connect(mapStateToProps, {togglePopupSignup, togglePopupLogin, login, signUp, toggleJustSignedUp, loginHasExpired})(App);
 

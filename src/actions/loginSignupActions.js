@@ -1,4 +1,4 @@
-import { RELOGIN,LOGIN_HAS_ERRORED,LOGIN_IS_LOADING, LOGIN_SUCCESS,LOGOUT_HAS_ERRORED,LOGOUT_IS_LOADING,LOGOUT_SUCCESS, SIGNUP_HAS_ERRORED, SIGNUP_IS_LOADING, JUST_SIGNED_UP} from './types';
+import { LOGIN_HAS_EXPIRED,LOGIN_HAS_ERRORED,LOGIN_IS_LOADING, LOGIN_SUCCESS,LOGOUT_HAS_ERRORED,LOGOUT_IS_LOADING,LOGOUT_SUCCESS, SIGNUP_HAS_ERRORED, SIGNUP_IS_LOADING, JUST_SIGNED_UP} from './types';
 
 export function loginHasErrored(bool) {
     return {
@@ -21,9 +21,9 @@ export function loginSuccess(username) {
     };
 }
 
-export function relogin() {
+export function loginHasExpired() {
     return {
-        type: RELOGIN,
+        type: LOGIN_HAS_EXPIRED
     }
 }
 
@@ -43,6 +43,7 @@ export function login(u,pw) {
             })})
             .then((response) => {
                 if (!response.ok) {
+                    dispatch(loginIsLoading(false));
                     throw Error(response.statusText);
                 }
                 dispatch(loginIsLoading(false));
