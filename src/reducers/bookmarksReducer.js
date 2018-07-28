@@ -1,35 +1,37 @@
-import {REORDER_BOOKMARKS, TOGGLE_EDIT, NEW_BOOKMARK_POPUP} from '../actions/types';
+import {REORDER_BOOKMARKS, TOGGLE_EDIT, NEW_BOOKMARK_POPUP, CREATE_BOOKMARK_SUCCESS, CREATE_BOOKMARK_HAS_ERRORED, CREATE_BOOKMARK_IS_LOADING, CREATE_CATEGORY_IS_LOADING, CREATE_CATEGORY_HAS_ERRORED, CREATE_CATEGORY_SUCCESS, UPDATE_CATEGORY_HAS_ERRORED, UPDATE_CATEGORY_IS_LOADING, JUST_CREATED_BOOKMARK, JUST_CREATED_CATEGORY, TOGGLE_BOOKMARK_FORM, TOGGLE_CATEGORY_FORM} from '../actions/types';
 
 const initialState = {
-    bookmarks: [
-        {
-            id:0,
-            title: "Bookmark "          
-        },
-        {
-            id:1,
-            title: "Bookmark "
-        },
-        {
-            id:2,
-            title: "Bookmark "
-        },
-        {
-            id:3,
-            title: "Bookmark "
-        },
-        {
-            id:4,
-            title: "Bookmark "
-        }
-    ],
-    order: [2,3,0,1,4],
+    categories: {
+        byID: [
+
+        ]
+    },
+    bookmarks: {
+        byID: [
+
+        ]
+    },
     edit: "",
-    newBookmarkPopup: false
+    newBookmarkPopup: false,
+    currentCategory: 0,
+    createBookmarkHasErrored: false,
+    createBookmarkIsLoading: false,
+    currentOrderID:1,
+    createCategoryHasErrored: false,
+    createCategoryIsLoading: false,
+    updateBookmarkHasErrored: false,
+    updateBookmarkIsLoading: false,
+    numberOfCategories: 0,
+    numberOfBookmarks: 0,
+    justCreatedBookmark: false,
+    justCreatedCategory: false,
+    addBookmark: true,
+    addCategory: false
 }
 
 function reorderIndex(newIndex,receivedIndex,state) {
     let newOrder = state.order.slice(0)
+    let newCategoryLoc = state.categoryLoc.slice(0)
     let placed = false
     if (newIndex < receivedIndex){
         for (let i=0;i<state.order.length;i++) {
@@ -38,12 +40,15 @@ function reorderIndex(newIndex,receivedIndex,state) {
                     break
                 } else {
                     newOrder[i]=state.order[i-1]
+                    newCategoryLoc[i] = state.categoryLoc[i-1]
                 }
             } else if (i===newIndex) {
                 newOrder[i]=state.order[receivedIndex]
+                newCategoryLoc[i] = state.categoryLoc[receivedIndex]
                 placed=true
             } else {
                 newOrder[i] = state.order[i]
+                newCategoryLoc[i] = state.categoryLoc[i]
             }
         }
     } else {
@@ -53,15 +58,18 @@ function reorderIndex(newIndex,receivedIndex,state) {
                     break
                 } else {
                     newOrder[i]=state.order[i+1]
+                    newCategoryLoc[i] = state.categoryLoc[i+1]
                 }
             } else if (i===newIndex) {
                 newOrder[i]=state.order[receivedIndex]
+                newCategoryLoc[i] = state.categoryLoc[receivedIndex]
                 placed=true
             } else {
                 newOrder[i] = state.order[i]
+                newCategoryLoc[i] = state.categoryLoc[i]
             }
         }
-    } return newOrder
+    } return [newOrder,newCategoryLoc]
 
 }
 
@@ -71,13 +79,164 @@ export default function(state = initialState, action) {
         default:
             return state;
 
-        case REORDER_BOOKMARKS:
-            let newOrder = reorderIndex(action.payload[0],action.payload[1],state)
-            
+        case CREATE_BOOKMARK_SUCCESS:
+            let bookmarkId = state.bookmarks.byID.length
+            let bookmarkOrderLength = state.categories.byID[state.currentCategory].bookmarkOrder.length
             return {
                 ...state,
-                order: newOrder
+                numberOfBookmarks: bookmarkId+1,
+                categories : {
+                    ...state.categories,
+                    byID: [
+                        ...state.categories.byID.slice(0,state.currentCategory),
+                        {
+                            ...state.categories.byID[state.currentCategory],
+                            bookmarkOrder:[...state.categories.byID[state.currentCategory].bookmarkOrder, bookmarkId],
+                            order:[...state.categories.byID[state.currentCategory].order, bookmarkOrderLength],
+                            categoryLoc:[...state.categories.byID[state.currentCategory].categoryLoc, 0],
+                        },
+                        ...state.categories.byID.slice(state.currentCategory+1)
+                    ]
+                },
+                bookmarks : {
+                    ...state.bookmarks,
+                    byID:
+                    [
+                        ...state.bookmarks.byID,
+                        {
+                        id: action.bookmarkjson.id,
+                        title:action.bookmarkjson.title,
+                        about:action.bookmarkjson.about,
+                        link: action.bookmarkjson.link,
+                        userID:action.bookmarkjson.userid,
+                        orderID:action.bookmarkjson.orderid
+                        }
+                    ]
+                },
+                currentOrderID: state.currentOrderID +1
             }
+
+        case CREATE_BOOKMARK_HAS_ERRORED:
+            return {
+                ...state,
+                createBookmarkHasErrored: action.createBookmarkHasErrored
+            }
+
+        case CREATE_BOOKMARK_IS_LOADING:
+            return {
+                ...state,
+                createBookmarkIsLoading: action.createBookmarkIsLoading
+            }
+
+        case JUST_CREATED_BOOKMARK:
+            return {
+                ...state,
+                justCreatedBookmark: action.justCreatedBookmark
+            }
+
+        case CREATE_CATEGORY_SUCCESS:
+            let categoriesLength = state.categories.byID.length;
+            if (categoriesLength===0) {
+                return {
+                    ...state,
+                    numberOfCategories: categoriesLength+1,
+                    categories: {
+                        byID: [
+                            {
+                                id:action.categoryjson.id,
+                                name:action.categoryjson.name,
+                                parent:action.categoryjson.parents,
+                                children: action.categoryjson.children,
+                                bookmarkOrder: action.categoryjson.bookmarkorder,
+                                categoryLoc: action.categoryjson.categoryloc,
+                                order: action.categoryjson.order,
+                                userID: action.categoryjson.userid,
+                                orderID: action.categoryjson.orderid
+                            }
+                        ]
+                    }
+                }
+            } else {
+                let childrenLength = state.categories.byID[state.currentCategory].children.length
+                return {
+                    ...state,
+                    numberOfCategories: categoriesLength +1,
+                    categories: {
+                        ...state.categories,
+                        byID: [
+                            ...state.categories.byID.slice(0,state.currentCategory),
+                            {
+                                ...state.categories.byID[state.currentCategory],
+                                children: [...state.categories.byID[state.currentCategory].children,categoriesLength],
+                                order:[...state.categories.byID[state.currentCategory].order, childrenLength],
+                                categoryLoc:[...state.categories.byID[state.currentCategory].categoryLoc, 1]
+                            },
+                            ...state.categories.byID.slice(state.currentCategory+1),
+                            {
+                                id:action.categoryjson.id,
+                                name:action.categoryjson.name,
+                                parent:action.categoryjson.parents,
+                                children: action.categoryjson.children,
+                                bookmarkOrder: action.categoryjson.bookmarkorder,
+                                categoryLoc: action.categoryjson.categoryloc,
+                                order: action.categoryjson.order,
+                                userID: action.categoryjson.userid,
+                                orderID: action.categoryjson.orderid
+                            }
+                        ]
+                    },
+                    currentOrderID: state.currentOrderID +1
+                }
+            }
+
+        case CREATE_CATEGORY_HAS_ERRORED:
+            return {
+                ...state,
+                createCategoryHasErrored: action.createCategoryHasErrored
+            }
+
+        case CREATE_CATEGORY_IS_LOADING:
+            return {
+                ...state,
+                createCategoryIsLoading: action.createCategoryIsLoading
+            }
+
+        case JUST_CREATED_CATEGORY:
+        return {
+            ...state,
+            justCreatedCategory: action.justCreatedCategory
+        }
+
+        case UPDATE_CATEGORY_HAS_ERRORED:
+            return {
+                ...state,
+                updateCategoryHasErrored: action.updateCategoryHasErrored
+            }
+
+        case UPDATE_CATEGORY_IS_LOADING:
+            return {
+                ...state,
+                updateCategoryIsLoading: action.updateCategoryIsLoading
+            }
+
+        case REORDER_BOOKMARKS:
+            let [newOrder,newCategoryLoc] = reorderIndex(action.payload[0],action.payload[1],state.categories.byID[state.currentCategory])
+            return {
+                ...state,
+                categories : {
+                    ...state.categories,
+                    byID : [
+                        ...state.categories.byID.slice(0,state.currentCategory),
+                        {
+                            ...state.categories.byID[state.currentCategory],
+                            order: newOrder,
+                            categoryLoc: newCategoryLoc
+                        },
+                        ...state.categories.byID.slice(state.currentCategory+1)
+                    ]
+                }
+            }
+            
 
         case TOGGLE_EDIT:
             if (state.edit==="edit-display") {
@@ -96,6 +255,18 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 newBookmarkPopup: action.newBookmarkPopup
+            }
+
+        case TOGGLE_BOOKMARK_FORM:
+            return {
+                ...state,
+                addBookmark: action.addBookmark
+            }
+
+        case TOGGLE_CATEGORY_FORM:
+            return {
+                ...state,
+                addCategory: action.addCategory
             }
             
 

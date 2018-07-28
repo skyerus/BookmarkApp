@@ -136,7 +136,7 @@ export function signUp(u,em,pw) {
         })})
         .then((response) => {
             if (!response.ok){
-                console.log(response.status);
+                console.log(response.statusText);
                 throw Error(response.statusText);
             }
             dispatch(signUpIsLoading(false));

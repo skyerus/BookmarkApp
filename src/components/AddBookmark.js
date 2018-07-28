@@ -5,9 +5,7 @@ export default (props) => {
   
   return (
     <div className="plus-bookmark-element" onClick={() => props.toggleNewBookmarkPopup(true)}>
-        <div className="plus-container">
-            <img src={plus} className="plus-img" alt="Add a new bookmark"/>
-        </div>
+        <img src={plus} className="plus-img" alt="Add a new bookmark"/>
     </div>
   )
 }

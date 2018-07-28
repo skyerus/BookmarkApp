@@ -4,14 +4,19 @@ import {NavLink} from 'react-router-dom';
 
 import Modal from './Modal';
 export default class WelcomePage extends Component {
-    
     componentDidMount() {
         if (this.props.loginPopup) {
             this.props.togglePopupLogin(false)
         } else if (this.props.signupPopup) {
             this.props.togglePopupSignup(false)
+        } 
+        if (this.props.justSignedUp) {
+            this.props.createCategory("master",0,[],[],[],[],0)
         }
-        console.log(document.cookie!=null)
+    }
+
+    handleSubmit(e) {
+        this.props.toggleJustSignedUp(false)
     }
     
     render() {
@@ -22,7 +27,7 @@ export default class WelcomePage extends Component {
                 <p>Start creating bookmarks</p>
                 <div className="signup-buttons">
                     <NavLink to="/bookmarks">
-                        <button className="btn btn-dark btn-lg login-btn" onClick={()=>this.props.toggleJustSignedUp(false)}>
+                        <button className="btn btn-dark btn-lg login-btn" onClick={() => this.handleSubmit()}>
                             Here
                         </button>
                     </NavLink>
@@ -48,3 +53,4 @@ export default class WelcomePage extends Component {
         )
     }
 }
+    

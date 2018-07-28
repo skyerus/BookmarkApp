@@ -6,6 +6,7 @@ import {Redirect} from 'react-router-dom';
 
 import {togglePopupSignup, togglePopupLogin} from '../actions/loginSignupModalActions';
 import {login, signUp, toggleJustSignedUp, loginHasExpired} from '../actions/loginSignUpActions';
+import {createCategory} from '../actions/bookmarksActions';
 
 import Signup from '../components/Signup';
 import Login from '../components/Login';
@@ -39,6 +40,7 @@ class App extends Component {
         loginPopup={this.props.loginPopup}
         signupPopup={this.props.signupPopup}
         username={this.props.username}
+        createCategory={this.props.createCategory}
       />
     } else if (!this.props.signupPopup && !this.props.loginPopup){
       welcome = 
@@ -110,5 +112,5 @@ const mapStateToProps = state => ({
   justSignedUp: state.SignUp.justSignedUp
 })
 
-export default connect(mapStateToProps, {togglePopupSignup, togglePopupLogin, login, signUp, toggleJustSignedUp, loginHasExpired})(App);
+export default connect(mapStateToProps, {togglePopupSignup, togglePopupLogin, login, signUp, toggleJustSignedUp, loginHasExpired,createCategory})(App);
 

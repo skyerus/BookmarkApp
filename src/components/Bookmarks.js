@@ -2,20 +2,38 @@ import React, { Component } from 'react'
 
 import Bookmark from './Bookmark';
 import AddBookmark from './AddBookmark';
+import Category from './Category';
 
 export default class Bookmarks extends Component {
   render() {
-      const bookmarks = this.props.order.map((order, index) => (
-        <Bookmark 
-            edit={this.props.edit} 
-            key={this.props.bookmarks[order].id} 
-            name= {this.props.bookmarks[order].title + this.props.bookmarks[order].id} 
-            about= "This is a bookmark iyhfi ues aieuh eiu hefi huef hiue fhiu efs hiue sfi ue sfaf  ssfe ffefea ffaf afa faa afaf afaf af" 
-            reorderBookmarks={this.props.reorderBookmarks} 
-            order={order} 
-            index={index}
-        />
-      ));
+      const bookmarksCategories = this.props.order.map((order,index) => {
+          if(this.props.categoryLoc[index]===0) {
+            let bookmarkID = this.props.bookmarkOrder[order]
+            return (
+                <Bookmark 
+                    edit={this.props.edit} 
+                    key={this.props.bookmarks.byID[bookmarkID].orderID} 
+                    name= {this.props.bookmarks.byID[bookmarkID].title} 
+                    about= {this.props.bookmarks.byID[bookmarkID].about}
+                    link={this.props.bookmarks.byID[bookmarkID].link} 
+                    reorderBookmarks={this.props.reorderBookmarks} 
+                    index={index}
+                />)
+        } else {
+            let categoryID = this.props.children[order]
+            return (
+                <Category 
+                    edit={this.props.edit} 
+                    key={this.props.categories.byID[categoryID].orderID} 
+                    name= {this.props.categories.byID[categoryID].name}  
+                    reorderBookmarks={this.props.reorderBookmarks} 
+                    order={order} 
+                    index={index}
+                />
+            ) 
+        }
+    });
+
     return (
         <div className="my-container min-height my-modal bookmarks-modal not-hidden">
             <div className="bookmark-header-container">
@@ -25,7 +43,7 @@ export default class Bookmarks extends Component {
             </div>
             <div className="bookmark-grid">
                 <AddBookmark toggleNewBookmarkPopup={this.props.toggleNewBookmarkPopup}/>
-                {bookmarks}
+                {bookmarksCategories}
             </div>
         </div>
     )

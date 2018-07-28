@@ -24,10 +24,6 @@ class Signup extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-
-    if (this.state.password!==this.state.reenterpassword){
-      return
-    }
     this.props.signUp(this.state.username,this.state.email,this.state.password)
   }
 
