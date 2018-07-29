@@ -6,16 +6,16 @@ import Category from './Category';
 
 export default class Bookmarks extends Component {
   render() {
-      const bookmarksCategories = this.props.order.map((order,index) => {
+      let bookmarksCategories = this.props.order.map((order,index) => {
           if(this.props.categoryLoc[index]===0) {
             let bookmarkID = this.props.bookmarkOrder[order]
             return (
                 <Bookmark 
                     edit={this.props.edit} 
-                    key={this.props.bookmarks.byID[bookmarkID].orderID} 
-                    name= {this.props.bookmarks.byID[bookmarkID].title} 
-                    about= {this.props.bookmarks.byID[bookmarkID].about}
-                    link={this.props.bookmarks.byID[bookmarkID].link} 
+                    key={this.props.bookmarks[this.props.userID][bookmarkID].orderID} 
+                    name= {this.props.bookmarks[this.props.userID][bookmarkID].title} 
+                    about= {this.props.bookmarks[this.props.userID][bookmarkID].about}
+                    link={this.props.bookmarks[this.props.userID][bookmarkID].link} 
                     reorderBookmarks={this.props.reorderBookmarks} 
                     index={index}
                 />)
@@ -24,8 +24,8 @@ export default class Bookmarks extends Component {
             return (
                 <Category 
                     edit={this.props.edit} 
-                    key={this.props.categories.byID[categoryID].orderID} 
-                    name= {this.props.categories.byID[categoryID].name}  
+                    key={this.props.categories[this.props.userID][categoryID].orderID} 
+                    name= {this.props.categories[this.props.userID][categoryID].name}  
                     reorderBookmarks={this.props.reorderBookmarks} 
                     order={order} 
                     index={index}

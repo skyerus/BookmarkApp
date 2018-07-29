@@ -3,6 +3,7 @@ import { LOGIN_HAS_EXPIRED,LOGIN_HAS_ERRORED,LOGIN_IS_LOADING, LOGIN_SUCCESS, LO
 const initialState = {
     isLoggedIn:false,
     username:"",
+    userID:null,
     loginHasErrored:false,
     redirectLogin: false,
     loginIsLoading: false,

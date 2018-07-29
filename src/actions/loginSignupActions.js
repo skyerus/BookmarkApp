@@ -1,4 +1,4 @@
-import { LOGIN_HAS_EXPIRED,LOGIN_HAS_ERRORED,LOGIN_IS_LOADING, LOGIN_SUCCESS,LOGOUT_HAS_ERRORED,LOGOUT_IS_LOADING,LOGOUT_SUCCESS, SIGNUP_HAS_ERRORED, SIGNUP_IS_LOADING, JUST_SIGNED_UP} from './types';
+import { LOGIN_HAS_EXPIRED,LOGIN_HAS_ERRORED,LOGIN_IS_LOADING, LOGIN_SUCCESS,LOGOUT_HAS_ERRORED,LOGOUT_IS_LOADING,LOGOUT_SUCCESS, SIGNUP_HAS_ERRORED, SIGNUP_IS_LOADING, JUST_SIGNED_UP, ADD_USER_ID, INIT_STATE, HYDRATE_CATEGORIES_IS_LOADING, HYDRATE_BOOKMARKS_IS_LOADING, HYDRATE_CATEGORIES_STATE, HYDRATE_BOOKMARKS_STATE} from './types';
 
 export function loginHasErrored(bool) {
     return {
@@ -47,10 +47,12 @@ export function login(u,pw) {
                     throw Error(response.statusText);
                 }
                 dispatch(loginIsLoading(false));
-                return u;
+                return response.json();
             })
-            .then((u) => dispatch(loginSuccess(u)))
-            .catch(() => dispatch(loginHasErrored(true)));
+            .then((response)=> {dispatch(loginSuccess(u)); return response})
+            .then((response)=> {dispatch(addUserID(response.id));return response})
+            .then((response) => {dispatch(initState());return response})
+            .then(() => {dispatch(hydrateCategories());dispatch(hydrateBookmarks())})
         
     }
 }
@@ -119,6 +121,19 @@ export function toggleJustSignedUp(bool){
     }
 }
 
+export function addUserID(id) {
+    return {
+        type: ADD_USER_ID,
+        id
+    }
+}
+
+export function initState() {
+    return {
+        type: INIT_STATE
+    }
+}
+
 export function signUp(u,em,pw) {
     return (dispatch) => {
         dispatch(signUpIsLoading(true));
@@ -136,14 +151,87 @@ export function signUp(u,em,pw) {
         })})
         .then((response) => {
             if (!response.ok){
-                console.log(response.statusText);
                 throw Error(response.statusText);
             }
             dispatch(signUpIsLoading(false));
             dispatch(toggleJustSignedUp(true));
-            return u;
+            return response.json();
         })
-        .then((u)=> dispatch(loginSuccess(u)))
+        .then((response)=> {dispatch(loginSuccess(u)); return response})
+        .then((response)=> dispatch(addUserID(response.id)))
+        .then(() => dispatch(initState()))
         .catch(()=>dispatch(signUpHasErrored(true)));
+    }
+}
+
+export function hydrateCategories() {
+    return (dispatch) => {
+        dispatch(hydrateCategoriesIsLoading(true));
+        fetch('http://localhost:8080/api/user/categories', {
+            method: 'GET',
+            headers: {
+                'Content-Type':'application/json',
+            },
+            mode: "cors",
+            credentials: "include"
+        })
+        .then((response)=> {
+            if (!response.ok){
+                throw Error(response.statusText)
+            }
+            dispatch(hydrateCategoriesIsLoading(false));
+            return response.json();
+        })
+        .then((response)=> dispatch(hydrateCategoriesState(response)))
+    }
+}
+
+export function hydrateCategoriesIsLoading(bool) {
+    return {
+        type: HYDRATE_CATEGORIES_IS_LOADING,
+        hydrateCategoriesIsLoading: bool
+    }
+}
+
+export function hydrateCategoriesState(categoriesArray) {
+    return {
+        type: HYDRATE_CATEGORIES_STATE,
+        categoriesArray
+    }
+}
+
+export function hydrateBookmarks() {
+    return (dispatch) => {
+        dispatch(hydrateBookmarksIsLoading(true));
+        fetch('http://localhost:8080/api/user/bookmarks', {
+            method: 'GET',
+            headers: {
+                'Content-Type':'application/json',
+            },
+            mode: "cors",
+            credentials: "include"
+        })
+        .then((response)=> {
+            if (!response.ok){
+                throw Error(response.statusText)
+            }
+            dispatch(hydrateBookmarksIsLoading(false));
+            return response.json();
+        })
+        .then((response)=> dispatch(hydrateBookmarksState(response)))
+    }
+}
+
+export function hydrateBookmarksIsLoading(bool) {
+    return {
+        type: HYDRATE_BOOKMARKS_IS_LOADING,
+        hydrateBookmarksIsLoading: bool
+    }
+}
+
+export function hydrateBookmarksState(bookmarksArray) {
+    return {
+        type: HYDRATE_BOOKMARKS_STATE,
+        bookmarksArray
     }
 }

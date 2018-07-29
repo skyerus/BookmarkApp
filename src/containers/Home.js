@@ -19,19 +19,20 @@ class Home extends Component {
           toggleEdit = {this.props.toggleEdit} 
           bookmarks = {this.props.bookmarks} 
           reorderBookmarks={this.props.reorderBookmarks} 
-          order= {this.props.categories.byID[this.props.currentCategory].order}
+          order= {this.props.categories[this.props.userID][this.props.currentCategory].order}
           toggleNewBookmarkPopup={this.props.toggleNewBookmarkPopup}
-          categoryLoc={this.props.categories.byID[this.props.currentCategory].categoryLoc}
+          categoryLoc={this.props.categories[this.props.userID][this.props.currentCategory].categoryLoc}
           categories = {this.props.categories}
-          children = {this.props.categories.byID[this.props.currentCategory].children}
-          bookmarkOrder = {this.props.categories.byID[this.props.currentCategory].bookmarkOrder}
+          children = {this.props.categories[this.props.userID][this.props.currentCategory].children}
+          bookmarkOrder = {this.props.categories[this.props.userID][this.props.currentCategory].bookmarkOrder}
+          userID = {this.props.userID}
         />)
     } else {
       return (
       <NewBookmarkPopup
         toggleNewBookmarkPopup={this.props.toggleNewBookmarkPopup}
         newBookmarkPopup={this.props.newBookmarkPopup}
-        currentCategoryObj = {this.props.categories.byID[this.props.currentCategory]}
+        currentCategoryObj = {this.props.categories[this.props.userID][this.props.currentCategory]}
         currentCategory = {this.props.currentCategory}
         currentOrderID = {this.props.currentOrderID}
         createBookmark = {this.props.createBookmark}
@@ -80,7 +81,8 @@ Home.propTypes = {
   addCategory: PropTypes.bool,
   toggleBookmarkForm: PropTypes.func.isRequired,
   toggleCategoryForm: PropTypes.func.isRequired,
-  createCategory: PropTypes.func.isRequired
+  createCategory: PropTypes.func.isRequired,
+  userID: PropTypes.number
 }
 
 const mapStateToProps = state => ({
@@ -95,7 +97,8 @@ const mapStateToProps = state => ({
   justCreatedBookmark: state.Bookmarks.justCreatedBookmark,
   justCreatedCategory: state.Bookmarks.justCreatedCategory,
   addBookmark: state.Bookmarks.addBookmark,
-  addCategory: state.Bookmarks.addCategory
+  addCategory: state.Bookmarks.addCategory,
+  userID: state.Bookmarks.userID
 })
 
 export default connect(mapStateToProps,{reorderBookmarks,toggleEdit,toggleNewBookmarkPopup,createBookmark,updateCategory,justCreatedBookmarkFunc,justCreatedCategoryFunc, toggleBookmarkForm,toggleCategoryForm, createCategory})(Home)
