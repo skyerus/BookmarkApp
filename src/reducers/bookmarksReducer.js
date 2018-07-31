@@ -1,4 +1,4 @@
-import {REORDER_BOOKMARKS, TOGGLE_EDIT, NEW_BOOKMARK_POPUP, CREATE_BOOKMARK_SUCCESS, CREATE_BOOKMARK_HAS_ERRORED, CREATE_BOOKMARK_IS_LOADING, CREATE_CATEGORY_IS_LOADING, CREATE_CATEGORY_HAS_ERRORED, CREATE_CATEGORY_SUCCESS, UPDATE_CATEGORY_HAS_ERRORED, UPDATE_CATEGORY_IS_LOADING, JUST_CREATED_BOOKMARK, JUST_CREATED_CATEGORY, TOGGLE_BOOKMARK_FORM, TOGGLE_CATEGORY_FORM, ADD_USER_ID, INIT_STATE, HYDRATE_BOOKMARKS_STATE, HYDRATE_CATEGORIES_STATE} from '../actions/types';
+import {REORDER_BOOKMARKS, TOGGLE_EDIT, NEW_BOOKMARK_POPUP, CREATE_BOOKMARK_SUCCESS, CREATE_BOOKMARK_HAS_ERRORED, CREATE_BOOKMARK_IS_LOADING, CREATE_CATEGORY_IS_LOADING, CREATE_CATEGORY_HAS_ERRORED, CREATE_CATEGORY_SUCCESS, UPDATE_CATEGORY_HAS_ERRORED, UPDATE_CATEGORY_IS_LOADING, JUST_CREATED_BOOKMARK, JUST_CREATED_CATEGORY, TOGGLE_BOOKMARK_FORM, TOGGLE_CATEGORY_FORM, ADD_USER_ID, INIT_STATE, HYDRATE_BOOKMARKS_STATE, HYDRATE_CATEGORIES_STATE, UPDATE_CURRENT_CATEGORY, GO_BACK, UPDATE_CURRENT_ORDER_ID} from '../actions/types';
 
 const initialState = {
     categories: {
@@ -22,12 +22,13 @@ const initialState = {
     justCreatedCategory: false,
     addBookmark: true,
     addCategory: false,
-    userID: null
+    userID: null,
+    history: []
 }
 
 function reorderIndex(newIndex,receivedIndex,state) {
     let newOrder = state.order.slice(0)
-    let newCategoryLoc = state.categoryLoc.slice(0)
+    let newCategoryLoc = state.categoryloc.slice(0)
     let placed = false
     if (newIndex < receivedIndex){
         for (let i=0;i<state.order.length;i++) {
@@ -36,15 +37,15 @@ function reorderIndex(newIndex,receivedIndex,state) {
                     break
                 } else {
                     newOrder[i]=state.order[i-1]
-                    newCategoryLoc[i] = state.categoryLoc[i-1]
+                    newCategoryLoc[i] = state.categoryloc[i-1]
                 }
             } else if (i===newIndex) {
                 newOrder[i]=state.order[receivedIndex]
-                newCategoryLoc[i] = state.categoryLoc[receivedIndex]
+                newCategoryLoc[i] = state.categoryloc[receivedIndex]
                 placed=true
             } else {
                 newOrder[i] = state.order[i]
-                newCategoryLoc[i] = state.categoryLoc[i]
+                newCategoryLoc[i] = state.categoryloc[i]
             }
         }
     } else {
@@ -54,15 +55,15 @@ function reorderIndex(newIndex,receivedIndex,state) {
                     break
                 } else {
                     newOrder[i]=state.order[i+1]
-                    newCategoryLoc[i] = state.categoryLoc[i+1]
+                    newCategoryLoc[i] = state.categoryloc[i+1]
                 }
             } else if (i===newIndex) {
                 newOrder[i]=state.order[receivedIndex]
-                newCategoryLoc[i] = state.categoryLoc[receivedIndex]
+                newCategoryLoc[i] = state.categoryloc[receivedIndex]
                 placed=true
             } else {
                 newOrder[i] = state.order[i]
-                newCategoryLoc[i] = state.categoryLoc[i]
+                newCategoryLoc[i] = state.categoryloc[i]
             }
         }
     } return [newOrder,newCategoryLoc]
@@ -77,7 +78,7 @@ export default function(state = initialState, action) {
 
         case CREATE_BOOKMARK_SUCCESS:
             let bookmarkId = state.bookmarks[state.userID].length
-            let bookmarkOrderLength = state.categories[state.userID][state.currentCategory].bookmarkOrder.length
+            let bookmarkOrderLength = state.categories[state.userID][state.currentCategory].bookmarkorder.length
             return {
                 ...state,
                 numberOfBookmarks: bookmarkId+1,
@@ -87,9 +88,9 @@ export default function(state = initialState, action) {
                         ...state.categories[state.userID].slice(0,state.currentCategory),
                         {
                             ...state.categories[state.userID][state.currentCategory],
-                            bookmarkOrder:[...state.categories[state.userID][state.currentCategory].bookmarkOrder, bookmarkId],
+                            bookmarkorder:[...state.categories[state.userID][state.currentCategory].bookmarkorder, bookmarkId],
                             order:[...state.categories[state.userID][state.currentCategory].order, bookmarkOrderLength],
-                            categoryLoc:[...state.categories[state.userID][state.currentCategory].categoryLoc, 0],
+                            categoryloc:[...state.categories[state.userID][state.currentCategory].categoryloc, 0],
                         },
                         ...state.categories[state.userID].slice(state.currentCategory+1)
                     ]
@@ -104,8 +105,8 @@ export default function(state = initialState, action) {
                         title:action.bookmarkjson.title,
                         about:action.bookmarkjson.about,
                         link: action.bookmarkjson.link,
-                        userID:action.bookmarkjson.userid,
-                        orderID:action.bookmarkjson.orderid
+                        userid:action.bookmarkjson.userid,
+                        orderid:action.bookmarkjson.orderid
                         }
                     ]
                 },
@@ -144,11 +145,11 @@ export default function(state = initialState, action) {
                                 name:action.categoryjson.name,
                                 parent:action.categoryjson.parents,
                                 children: action.categoryjson.children,
-                                bookmarkOrder: action.categoryjson.bookmarkorder,
-                                categoryLoc: action.categoryjson.categoryloc,
+                                bookmarkorder: action.categoryjson.bookmarkorder,
+                                categoryloc: action.categoryjson.categoryloc,
                                 order: action.categoryjson.order,
-                                userID: action.categoryjson.userid,
-                                orderID: action.categoryjson.orderid
+                                userid: action.categoryjson.userid,
+                                orderid: action.categoryjson.orderid
                             }
                         ]
                     }
@@ -166,7 +167,7 @@ export default function(state = initialState, action) {
                                 ...state.categories[state.userID][state.currentCategory],
                                 children: [...state.categories[state.userID][state.currentCategory].children,categoriesLength],
                                 order:[...state.categories[state.userID][state.currentCategory].order, childrenLength],
-                                categoryLoc:[...state.categories[state.userID][state.currentCategory].categoryLoc, 1]
+                                categoryloc:[...state.categories[state.userID][state.currentCategory].categoryloc, 1]
                             },
                             ...state.categories[state.userID].slice(state.currentCategory+1),
                             {
@@ -174,11 +175,11 @@ export default function(state = initialState, action) {
                                 name:action.categoryjson.name,
                                 parent:action.categoryjson.parents,
                                 children: action.categoryjson.children,
-                                bookmarkOrder: action.categoryjson.bookmarkorder,
-                                categoryLoc: action.categoryjson.categoryloc,
+                                bookmarkorder: action.categoryjson.bookmarkorder,
+                                categoryloc: action.categoryjson.categoryloc,
                                 order: action.categoryjson.order,
-                                userID: action.categoryjson.userid,
-                                orderID: action.categoryjson.orderid
+                                userid: action.categoryjson.userid,
+                                orderid: action.categoryjson.orderid
                             }
                         ]
                     },
@@ -227,7 +228,7 @@ export default function(state = initialState, action) {
                         {
                             ...state.categories[state.userID][state.currentCategory],
                             order: newOrder,
-                            categoryLoc: newCategoryLoc
+                            categoryloc: newCategoryLoc
                         },
                         ...state.categories[state.userID].slice(state.currentCategory+1)
                     ]
@@ -295,7 +296,6 @@ export default function(state = initialState, action) {
                 bookmarks: {
                     ...state.bookmarks,
                     [state.userID] : [
-                        ...state.bookmarks[state.userID],
                         ...action.bookmarksArray
                     ]
                 }
@@ -307,10 +307,36 @@ export default function(state = initialState, action) {
                 categories: {
                     ...state.categories,
                     [state.userID] : [
-                        ...state.categories[state.userID],
                         ...action.categoriesArray
                     ]
                 }
+            }
+
+        case UPDATE_CURRENT_ORDER_ID:
+            return {
+                ...state,
+                currentOrderID: state.categories[state.userID][state.currentCategory].order.length+1
+            }
+
+        case UPDATE_CURRENT_CATEGORY:
+            return {
+                ...state,
+                history: [
+                    ...state.history,
+                    state.currentCategory
+                ],
+                currentCategory: action.updateCurrentCategory
+            }
+
+        case GO_BACK:
+            let historyLength = state.history.length
+            return {
+                ...state,
+                currentCategory: state.history[historyLength-1],
+                history: [
+                    ...state.history.slice(0,historyLength-1)
+                ]
+
             }
             
 

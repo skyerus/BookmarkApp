@@ -1,4 +1,5 @@
-import {REORDER_BOOKMARKS, TOGGLE_EDIT, NEW_BOOKMARK_POPUP,CREATE_BOOKMARK_HAS_ERRORED, CREATE_BOOKMARK_IS_LOADING, CREATE_BOOKMARK_SUCCESS,CREATE_CATEGORY_HAS_ERRORED,CREATE_CATEGORY_IS_LOADING,CREATE_CATEGORY_SUCCESS,UPDATE_CATEGORY_HAS_ERRORED,UPDATE_CATEGORY_IS_LOADING, JUST_CREATED_BOOKMARK, JUST_CREATED_CATEGORY, TOGGLE_BOOKMARK_FORM, TOGGLE_CATEGORY_FORM} from './types';
+import {REORDER_BOOKMARKS, TOGGLE_EDIT, NEW_BOOKMARK_POPUP,CREATE_BOOKMARK_HAS_ERRORED, CREATE_BOOKMARK_IS_LOADING, CREATE_BOOKMARK_SUCCESS,CREATE_CATEGORY_HAS_ERRORED,CREATE_CATEGORY_IS_LOADING,CREATE_CATEGORY_SUCCESS,UPDATE_CATEGORY_HAS_ERRORED,UPDATE_CATEGORY_IS_LOADING, JUST_CREATED_BOOKMARK, JUST_CREATED_CATEGORY, TOGGLE_BOOKMARK_FORM, TOGGLE_CATEGORY_FORM, UPDATE_CURRENT_CATEGORY, GO_BACK} from './types';
+import { updateCurrentOrderID } from './loginSignUpActions';
 
 export const reorderBookmarks = (newIndex,receivedIndex) => dispatch => {
     dispatch({
@@ -81,7 +82,6 @@ export function createBookmark(title,about,link,category,orderid) {
 }
 
 export function createCategoryHasErrored(bool,e) {
-    console.log(e)
     return {
         type: CREATE_CATEGORY_HAS_ERRORED,
         createCategoryHasErrored: bool,
@@ -192,7 +192,7 @@ export function updateCategory(id,name,children,bookmarkorder,order,categoryloc)
                 // return response.json();
             })
             // .then(() => dispatch(updateCategorySuccess(true)))
-            .catch(() => dispatch(updateCategoryHasErrored(true)));
+            .catch(() => {dispatch(updateCategoryHasErrored(true))});
     }
 }
 
@@ -209,3 +209,49 @@ export function toggleCategoryForm(bool) {
         addCategory: bool
     }
 }
+
+export function updateCurrentCategory(category) {
+    return {
+        type: UPDATE_CURRENT_CATEGORY,
+        updateCurrentCategory: category
+    }
+}
+
+export function updateCurrentCategoryPromise(category) {
+    return (dispatch) => {
+        return new Promise(function(resolve,reject) {
+            dispatch(updateCurrentCategory(category));
+            resolve();
+        })
+    }
+}
+
+export function changeCategory(category) {
+    return (dispatch) => {
+        dispatch(updateCurrentCategoryPromise(category))
+        .then(() => dispatch(updateCurrentOrderID()))
+    }
+}
+
+export function goBack() {
+    return (dispatch) => {
+        dispatch(goBackPromise())
+        .then(()=> dispatch(updateCurrentOrderID()))
+    }
+}
+
+export function goBackPromise() {
+    return (dispatch) => {
+        return new Promise(function(resolve,reject){
+            dispatch(goBackAction())
+            resolve();
+        })
+    }
+}
+
+export function goBackAction() {
+    return {
+        type: GO_BACK
+    }
+}
+

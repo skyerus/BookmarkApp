@@ -1,4 +1,5 @@
-import { LOGIN_HAS_EXPIRED,LOGIN_HAS_ERRORED,LOGIN_IS_LOADING, LOGIN_SUCCESS,LOGOUT_HAS_ERRORED,LOGOUT_IS_LOADING,LOGOUT_SUCCESS, SIGNUP_HAS_ERRORED, SIGNUP_IS_LOADING, JUST_SIGNED_UP, ADD_USER_ID, INIT_STATE, HYDRATE_CATEGORIES_IS_LOADING, HYDRATE_BOOKMARKS_IS_LOADING, HYDRATE_CATEGORIES_STATE, HYDRATE_BOOKMARKS_STATE} from './types';
+import { LOGIN_HAS_EXPIRED,LOGIN_HAS_ERRORED,LOGIN_IS_LOADING, LOGIN_SUCCESS,LOGOUT_HAS_ERRORED,LOGOUT_IS_LOADING,LOGOUT_SUCCESS, SIGNUP_HAS_ERRORED, SIGNUP_IS_LOADING, JUST_SIGNED_UP, ADD_USER_ID, INIT_STATE, HYDRATE_CATEGORIES_IS_LOADING, HYDRATE_BOOKMARKS_IS_LOADING, HYDRATE_CATEGORIES_STATE, HYDRATE_BOOKMARKS_STATE, HYDRATE_CATEGORIES_HAS_ERRORED, HYDRATE_BOOKMARKS_HAS_ERRORED, UPDATE_CURRENT_ORDER_ID} from './types';
+import { updateCurrentCategory } from './bookmarksActions';
 
 export function loginHasErrored(bool) {
     return {
@@ -53,6 +54,8 @@ export function login(u,pw) {
             .then((response)=> {dispatch(addUserID(response.id));return response})
             .then((response) => {dispatch(initState());return response})
             .then(() => {dispatch(hydrateCategories());dispatch(hydrateBookmarks())})
+            .then(() => dispatch(updateCurrentOrderID()))
+            .catch(() => dispatch(loginHasErrored(true)))
         
     }
 }
@@ -94,7 +97,9 @@ export function logout() {
                 }
                 dispatch(toggleJustSignedUp(false));
                 dispatch(logoutIsLoading(false));
-            }).then(()=>{
+            })
+            .then(()=>dispatch(updateCurrentCategory(0)))
+            .then(()=>{
                 dispatch(logoutSuccess());
             }).catch(()=> dispatch(logoutHasErrored(true)))
     }
@@ -183,6 +188,7 @@ export function hydrateCategories() {
             return response.json();
         })
         .then((response)=> dispatch(hydrateCategoriesState(response)))
+        .catch(() => dispatch(hydrateCategoriesHasErrored(true)))
     }
 }
 
@@ -197,6 +203,13 @@ export function hydrateCategoriesState(categoriesArray) {
     return {
         type: HYDRATE_CATEGORIES_STATE,
         categoriesArray
+    }
+}
+
+export function hydrateCategoriesHasErrored(bool) {
+    return {
+        type: HYDRATE_CATEGORIES_HAS_ERRORED,
+        hydrateCategoriesHasErrored: bool
     }
 }
 
@@ -219,6 +232,7 @@ export function hydrateBookmarks() {
             return response.json();
         })
         .then((response)=> dispatch(hydrateBookmarksState(response)))
+        .catch(() => dispatch(hydrateBookmarksHasErrored(true)))
     }
 }
 
@@ -233,5 +247,18 @@ export function hydrateBookmarksState(bookmarksArray) {
     return {
         type: HYDRATE_BOOKMARKS_STATE,
         bookmarksArray
+    }
+}
+
+export function hydrateBookmarksHasErrored(bool) {
+    return {
+        type: HYDRATE_BOOKMARKS_HAS_ERRORED,
+        hydrateBookmarksHasErrored: bool
+    }
+}
+
+export function updateCurrentOrderID() {
+    return {
+        type: UPDATE_CURRENT_ORDER_ID,
     }
 }

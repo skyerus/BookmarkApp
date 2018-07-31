@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import  {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {reorderBookmarks,toggleEdit,toggleNewBookmarkPopup,createBookmark,updateCategory,justCreatedBookmarkFunc,justCreatedCategoryFunc, toggleBookmarkForm, toggleCategoryForm, createCategory} from '../actions/bookmarksActions';
+import {reorderBookmarks,toggleEdit,toggleNewBookmarkPopup,createBookmark,updateCategory,justCreatedBookmarkFunc,justCreatedCategoryFunc, toggleBookmarkForm, toggleCategoryForm, createCategory, changeCategory, goBack} from '../actions/bookmarksActions';
 
 import Navbar from '../containers/Navbar';
 import Bookmarks from '../components/Bookmarks';
@@ -21,11 +21,16 @@ class Home extends Component {
           reorderBookmarks={this.props.reorderBookmarks} 
           order= {this.props.categories[this.props.userID][this.props.currentCategory].order}
           toggleNewBookmarkPopup={this.props.toggleNewBookmarkPopup}
-          categoryLoc={this.props.categories[this.props.userID][this.props.currentCategory].categoryLoc}
+          categoryloc={this.props.categories[this.props.userID][this.props.currentCategory].categoryloc}
           categories = {this.props.categories}
           children = {this.props.categories[this.props.userID][this.props.currentCategory].children}
-          bookmarkOrder = {this.props.categories[this.props.userID][this.props.currentCategory].bookmarkOrder}
+          bookmarkOrder = {this.props.categories[this.props.userID][this.props.currentCategory].bookmarkorder}
           userID = {this.props.userID}
+          changeCategory={this.props.changeCategory}
+          currentCategoryObj = {this.props.categories[this.props.userID][this.props.currentCategory]}
+          goBack={this.props.goBack}
+          currentCategory={this.props.currentCategory}
+          updateCategory={this.props.updateCategory}
         />)
     } else {
       return (
@@ -82,7 +87,9 @@ Home.propTypes = {
   toggleBookmarkForm: PropTypes.func.isRequired,
   toggleCategoryForm: PropTypes.func.isRequired,
   createCategory: PropTypes.func.isRequired,
-  userID: PropTypes.number
+  userID: PropTypes.number,
+  changeCategory: PropTypes.func.isRequired,
+  goBack: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
@@ -101,4 +108,4 @@ const mapStateToProps = state => ({
   userID: state.Bookmarks.userID
 })
 
-export default connect(mapStateToProps,{reorderBookmarks,toggleEdit,toggleNewBookmarkPopup,createBookmark,updateCategory,justCreatedBookmarkFunc,justCreatedCategoryFunc, toggleBookmarkForm,toggleCategoryForm, createCategory})(Home)
+export default connect(mapStateToProps,{reorderBookmarks,toggleEdit,toggleNewBookmarkPopup,createBookmark,updateCategory,justCreatedBookmarkFunc,justCreatedCategoryFunc, toggleBookmarkForm,toggleCategoryForm, createCategory, changeCategory, goBack})(Home)

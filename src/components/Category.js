@@ -12,11 +12,16 @@ export default class Category extends Component {
     onDrop = (ev, newIndex) => {
         let receivedIndex = ev.dataTransfer.getData("index");
         this.props.reorderBookmarks(newIndex,receivedIndex)
+        this.props.updateCategory(this.props.currentCategoryObj.id,this.props.currentCategoryObj.name,this.props.currentCategoryObj.children,this.props.currentCategoryObj.bookmarkorder,this.props.currentCategoryObj.order,this.props.currentCategoryObj.categoryloc)
      }
+
+    handleClick() {
+        this.props.changeCategory(this.props.children[this.props.order])
+    }
 
     render() {
     return (
-    <div draggable onDragStart = {(e) => this.onDragStart(e, this.props.index)} onDragOver={(e)=>this.onDragOver(e)} onDrop={(e)=>{this.onDrop(e, this.props.index)}} className="flex-wrap">
+    <div onClick={()=>this.handleClick()} draggable onDragStart = {(e) => this.onDragStart(e, this.props.index)} onDragOver={(e)=>this.onDragOver(e)} onDrop={(e)=>{this.onDrop(e, this.props.index)}} className="flex-wrap">
         <div className="category">
             {this.props.name}
         </div>

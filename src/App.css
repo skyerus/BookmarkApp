@@ -168,7 +168,7 @@ button:focus {outline:0;}
   grid-gap: 1vh 1vh;
   gap: 1vh 1vh;
   margin-top: 1vh;
-  grid-auto-rows: minmax(17vh, auto);
+  /* grid-auto-rows: minmax(17vh, auto); */
 }
 
 .bookmark-element {
@@ -280,25 +280,47 @@ button:focus {outline:0;}
   max-height:5vh;
 }
 
-.bookmark-header-container {
+/* .bookmark-header-container {
   display:grid;
   grid-template-columns: repeat(12,1fr);
+} */
+
+.bookmark-header-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
 }
 
 .title-grid-element {
-  grid-column: 5/9;
-  align-self: center;
+  justify-self: center;
+  flex-grow: 1;
+  margin-top: -1.2vh;
+  padding-bottom: 0.8vh;
+  margin-left: -0.5vh;
+}
+
+.title-grid-element-wo-back {
+  justify-self: center;
+  flex-grow: 1;
+  margin-top: -1.2vh;
+  padding-bottom: 0.8vh;
+  margin-left: 7vh;
+}
+
+.edit-grid-btn {
+  justify-self: flex-end;
+  margin-right: 0.5vh;
+  margin-top: 2vh;
 }
 
 .save-grid-btn {
-  grid-column: 12;
-  margin-top: 20%;
-  justify-self: right;
+  justify-self: flex-end;
+  margin-top: 2vh;
 }
 
 .left-grid-btn {
-  margin-top: 20%;
-  justify-self: left;
+  justify-self: flex-start;
+  margin-top: 2vh;
 }
 
 .username-border {
@@ -310,8 +332,6 @@ button:focus {outline:0;}
 }
 
 .spinner-1 {
-  /* content: ""; */
-  /* box-sizing: border-box; */
   position: relative;
   top: 50%;
   left: 50%;
@@ -383,12 +403,13 @@ button:focus {outline:0;}
 .category {
   position: relative;
   display: inline-block;
-  width: 100%;
+  width: 70%;
   height: 0;
-  padding: 50% 0;
+  padding: 35% 0;
   border-radius: 50%;
   background-color: #428bca;
   line-height: 0;
   color: #fff;
-  font-size: 4vh;
+  font-size: 1.5vw;
+  overflow: hidden;
 }

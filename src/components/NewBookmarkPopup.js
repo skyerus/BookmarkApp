@@ -48,7 +48,7 @@ export default class NewBookmarkPopup extends Component {
 
     componentDidUpdate() {
         if (this.props.justCreatedBookmark) {
-            this.props.updateCategory(this.props.currentCategoryObj.id,this.props.currentCategoryObj.name,this.props.currentCategoryObj.children,this.props.currentCategoryObj.bookmarkOrder,this.props.currentCategoryObj.order,this.props.currentCategoryObj.categoryLoc)
+            this.props.updateCategory(this.props.currentCategoryObj.id,this.props.currentCategoryObj.name,this.props.currentCategoryObj.children,this.props.currentCategoryObj.bookmarkorder,this.props.currentCategoryObj.order,this.props.currentCategoryObj.categoryloc)
             this.props.justCreatedBookmarkFunc(false)
         }
     }
