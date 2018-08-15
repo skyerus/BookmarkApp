@@ -9,7 +9,9 @@ class Signup extends Component {
       username: "",
       email: "",
       password: "",
-      reenterpassword: ""
+      reenterpassword: "",
+      passwordsNotSame: false,
+      missingFields: false
     };
 
     this.onChange = this.onChange.bind(this);
@@ -23,8 +25,18 @@ class Signup extends Component {
   }
 
   handleSubmit(e) {
+    this.setState({passwordsNotSame:false})
+    this.setState({missingFields:false})
     e.preventDefault();
-    this.props.signUp(this.state.username,this.state.email,this.state.password)
+    if (this.state.password===this.state.reenterpassword && this.state.password!=="" && this.state.username!=="" && this.state.email!==""){
+      this.props.signUpHasErroredFunc(false, 409)
+      this.props.signUp(this.state.username,this.state.email,this.state.password)
+    }
+    if (this.state.password!== this.state.reenterpassword) {
+      this.setState({passwordsNotSame:true})
+    } else if (this.state.password==="" || this.state.username==="" || this.state.email==="") {
+      this.setState({missingFields:true})
+    }
   }
 
   componentDidMount() {
@@ -33,6 +45,7 @@ class Signup extends Component {
 
   componentWillUnmount() {
     document.removeEventListener('mousedown', this.handleClickOutside);
+    this.props.signUpHasErroredFunc(false, 409);
   }
 
   setWrapperRef(node) {
@@ -48,6 +61,16 @@ class Signup extends Component {
   
 
   render() {
+    let usernameError;
+    let error;
+    if (this.props.userAlreadyExists) {
+      usernameError = <p className="red-text">Username unavailable</p>
+    }
+    if (this.state.passwordsNotSame) {
+      error = <p className="red-text">Passwords don't match</p>
+    } else if (this.state.missingFields) {
+      error = <p className="red-text">Please fill out all fields</p>
+    }
     return (
       <div className="not-hidden">
         <div ref={this.setWrapperRef} className="my-modal form-modal">
@@ -56,6 +79,7 @@ class Signup extends Component {
             <div className="form-group">
               <label>Username:</label>
               <input className= "form-control" name= "username" type="text" onChange={this.onChange} value={this.state.username}/>
+              {usernameError}
             </div>
             <div className="form-group">
               <label>Email:</label>
@@ -68,6 +92,7 @@ class Signup extends Component {
             <div className="form-group">
               <label>Re-enter password:</label>
               <input className= "form-control" name= "reenterpassword" type="password" onChange={this.onChange} value={this.state.reenterpassword}/>
+              {error}
             </div>
           </form>
           <div className="align-center">

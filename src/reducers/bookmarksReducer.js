@@ -1,8 +1,20 @@
-import {REORDER_BOOKMARKS, TOGGLE_EDIT, NEW_BOOKMARK_POPUP, CREATE_BOOKMARK_SUCCESS, CREATE_BOOKMARK_HAS_ERRORED, CREATE_BOOKMARK_IS_LOADING, CREATE_CATEGORY_IS_LOADING, CREATE_CATEGORY_HAS_ERRORED, CREATE_CATEGORY_SUCCESS, UPDATE_CATEGORY_HAS_ERRORED, UPDATE_CATEGORY_IS_LOADING, JUST_CREATED_BOOKMARK, JUST_CREATED_CATEGORY, TOGGLE_BOOKMARK_FORM, TOGGLE_CATEGORY_FORM, ADD_USER_ID, INIT_STATE, HYDRATE_BOOKMARKS_STATE, HYDRATE_CATEGORIES_STATE, UPDATE_CURRENT_CATEGORY, GO_BACK, UPDATE_CURRENT_ORDER_ID} from '../actions/types';
+import {REORDER_BOOKMARKS, TOGGLE_EDIT, NEW_BOOKMARK_POPUP, CREATE_BOOKMARK_SUCCESS, CREATE_BOOKMARK_HAS_ERRORED, CREATE_BOOKMARK_IS_LOADING, CREATE_CATEGORY_IS_LOADING, CREATE_CATEGORY_HAS_ERRORED, CREATE_CATEGORY_SUCCESS, UPDATE_CATEGORY_HAS_ERRORED, UPDATE_CATEGORY_IS_LOADING, JUST_CREATED_BOOKMARK, JUST_CREATED_CATEGORY, TOGGLE_BOOKMARK_FORM, TOGGLE_CATEGORY_FORM, ADD_USER_ID, INIT_STATE, HYDRATE_BOOKMARKS_STATE, HYDRATE_CATEGORIES_STATE, UPDATE_CURRENT_CATEGORY, GO_BACK, UPDATE_CURRENT_ORDER_ID, REMOVE_CATEGORY_FROM_STATE, REMOVE_BOOKMARK_FROM_STATE} from '../actions/types';
 
 const initialState = {
     categories: {
-        
+        0 : [
+            {
+            id:0,
+            name:"",
+            parent:"",
+            children: [],
+            bookmarkorder: [],
+            categoryloc: [],
+            order: [],
+            userid: 0,
+            orderid: 0
+            }
+        ]
     },
     bookmarks: {
     },
@@ -22,8 +34,9 @@ const initialState = {
     justCreatedCategory: false,
     addBookmark: true,
     addCategory: false,
-    userID: null,
-    history: []
+    userID: 0,
+    history: [],
+    editBool: false
 }
 
 function reorderIndex(newIndex,receivedIndex,state) {
@@ -105,6 +118,7 @@ export default function(state = initialState, action) {
                         title:action.bookmarkjson.title,
                         about:action.bookmarkjson.about,
                         link: action.bookmarkjson.link,
+                        category: action.bookmarkjson.category,
                         userid:action.bookmarkjson.userid,
                         orderid:action.bookmarkjson.orderid
                         }
@@ -140,6 +154,7 @@ export default function(state = initialState, action) {
                     categories: {
                         ...state.categories,
                         [state.userID]: [
+                            ...state.categories[state.userID],
                             {
                                 id:action.categoryjson.id,
                                 name:action.categoryjson.name,
@@ -240,12 +255,14 @@ export default function(state = initialState, action) {
             if (state.edit==="edit-display") {
                 return {
                     ...state,
-                    edit: ""
+                    edit: "",
+                    editBool: false
                 }
             } else {
                 return {
                     ...state,
-                    edit:"edit-display"
+                    edit:"edit-display",
+                    editBool: true
                 }
             }
 
@@ -287,7 +304,9 @@ export default function(state = initialState, action) {
                     [state.userID]: [
 
                     ]
-                }
+                },
+                history: [],
+                currentOrderID: 1
             }
 
         case HYDRATE_BOOKMARKS_STATE:
@@ -309,7 +328,8 @@ export default function(state = initialState, action) {
                     [state.userID] : [
                         ...action.categoriesArray
                     ]
-                }
+                },
+                currentOrderID: action.categoriesArray.length + state.bookmarks[state.userID].length+100
             }
 
         case UPDATE_CURRENT_ORDER_ID:
@@ -338,8 +358,139 @@ export default function(state = initialState, action) {
                 ]
 
             }
+
+        case REMOVE_CATEGORY_FROM_STATE:
+            historyLength = state.history.length
+            let parentCategory = state.history[historyLength-1]
+            if (state.categories[state.userID][parentCategory].categoryloc.length === 1) {
+                return {
+                    ...state,
+                    categories: {
+                        ...state.categories,
+                        [state.userID] : [
+                            ...state.categories[state.userID].slice(0,parentCategory),
+                            {
+                                ...state.categories[state.userID][parentCategory],
+                                children: [],
+                                order: [],
+                                categoryloc: []
+                            },
+                            ...state.categories[state.userID].slice(parentCategory+1,state.currentCategory),
+                            ...state.categories[state.userID].slice(state.currentCategory+1)
+                        ]
+                    },
+                    currentCategory: 0,
+                    history: []
+                }
+            } else {
+                var childrenIndex = findIndex(state.categories[state.userID][parentCategory].children,action.id)
+                var orderIndex = findOrderIndex(state.categories[state.userID][parentCategory].order,childrenIndex,state.categories[state.userID][parentCategory].categoryloc )
+                let newCategoryOrder = []
+                for (let i=0; i< state.categories[state.userID][parentCategory].order.length; i++) {
+                    if (state.categories[state.userID][parentCategory].categoryloc[i]===1) {
+                        if (state.categories[state.userID][parentCategory].order[i] > childrenIndex) {
+                            newCategoryOrder.push(state.categories[state.userID][parentCategory].order[i]-1)
+                        } else if (state.categories[state.userID][parentCategory].order[i]< childrenIndex) {
+                            newCategoryOrder.push(state.categories[state.userID][parentCategory].order[i])
+                        }
+                    } else {
+                        newCategoryOrder.push(state.categories[state.userID][parentCategory].order[i])
+                    }
+                }
+                let newChildrenOrder = []
+                for (let i=0; i< state.categories[state.userID][parentCategory].children.length; i++) {
+                    if (state.categories[state.userID][parentCategory].children[i] > action.id) {
+                        newChildrenOrder.push(state.categories[state.userID][parentCategory].children[i]-1)
+                    } else if (state.categories[state.userID][parentCategory].children[i]< action.id) {
+                        newChildrenOrder.push(state.categories[state.userID][parentCategory].children[i])
+                    }
+                }
+
+            var newCategories=[];
+            let newChildren=[];
+            let counter=0;
+            for (let i=parentCategory+1; i< state.categories[state.userID].length; i++) {
+                if (i===state.currentCategory) {
+                    continue
+                }
+                for (let j =0; j< state.categories[state.userID][i].children.length; j++) {
+                    newChildren.push(state.categories[state.userID][i].children[j]-1)
+                }
+                newCategories.push(state.categories[state.userID][i])
+                newCategories[counter].children=newChildren
+                newChildren=[]
+                counter++
+            }
+
+                return {
+                    ...state,
+                    categories: {
+                        ...state.categories,
+                        [state.userID] : [
+                            ...state.categories[state.userID].slice(0,parentCategory),
+                            {
+                                ...state.categories[state.userID][parentCategory],
+                                children: newChildrenOrder,
+                                order: newCategoryOrder,
+                                categoryloc: [
+                                    ...state.categories[state.userID][parentCategory].categoryloc.slice(0,orderIndex),
+                                    ...state.categories[state.userID][parentCategory].categoryloc.slice(orderIndex+1)
+                                ]
+
+                            },
+                            ...newCategories
+                            // ...state.categories[state.userID].slice(parentCategory+1,state.currentCategory),
+                            // ...state.categories[state.userID].slice(state.currentCategory+1)
+
+                        ]
+                    },
+                    currentCategory: state.history[historyLength-1],
+                    history: [
+                        ...state.history.slice(0,historyLength-1)
+                    ]
+                }
+        }
+
+        case REMOVE_BOOKMARK_FROM_STATE:
+            historyLength = state.history.length
+            let bookmarkCategory = state.bookmarks[state.userID][action.id].category
+
+            return {
+                ...state,
+                bookmarks: {
+                    ...state.bookmarks,
+                    [state.userID]: [
+                        ...state.bookmarks[state.userID].slice(0,action.id),
+                        ...state.bookmarks[state.userID].slice(action.id+1)
+                        
+                    ]
+                }
+            }
+            
             
 
 
     }
+}
+
+function findIndex(array,id) {
+    for (var index=0; index < array.length; index++) {
+        if (array[index] === id) {
+            break
+        }
+    }
+    return index
+}
+
+function findOrderIndex(array,id,categoryloc) {
+    for (var index=0; index < array.length; index++) {
+        if (array[index] === id) {
+            if (categoryloc[index]===0) {
+                continue
+            } else {
+                break
+            }
+        }
+    }
+    return index
 }

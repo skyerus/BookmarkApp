@@ -1,4 +1,4 @@
-import { LOGIN_HAS_EXPIRED,LOGIN_HAS_ERRORED,LOGIN_IS_LOADING, LOGIN_SUCCESS, LOGOUT_HAS_ERRORED, LOGOUT_IS_LOADING, LOGOUT_SUCCESS } from '../actions/types';
+import { LOGIN_HAS_EXPIRED,LOGIN_HAS_ERRORED,LOGIN_IS_LOADING, LOGIN_SUCCESS, LOGOUT_HAS_ERRORED, LOGOUT_IS_LOADING, LOGOUT_SUCCESS, USER_NO_EXISTS, INCORRECT_PASSWORD } from '../actions/types';
 
 const initialState = {
     isLoggedIn:false,
@@ -8,7 +8,9 @@ const initialState = {
     redirectLogin: false,
     loginIsLoading: false,
     logoutHasErrored: false,
-    logoutIsLoading: false
+    logoutIsLoading: false,
+    userNoExists: false,
+    incorrectPassword: false
 }
 
 export default function(state=initialState, action){
@@ -63,6 +65,18 @@ export default function(state=initialState, action){
                 isLoggedIn: false,
                 redirectLogin: false,
                 username:""
+            }
+
+        case USER_NO_EXISTS:
+            return {
+                ...state,
+                userNoExists: action.loginHasErrored
+            }
+
+        case INCORRECT_PASSWORD:
+            return {
+                ...state,
+                incorrectPassword: action.loginHasErrored
             }
             
             

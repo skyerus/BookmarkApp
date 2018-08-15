@@ -15,6 +15,10 @@ export default class Bookmark extends Component {
         this.props.updateCategory(this.props.currentCategoryObj.id,this.props.currentCategoryObj.name,this.props.currentCategoryObj.children,this.props.currentCategoryObj.bookmarkorder,this.props.currentCategoryObj.order,this.props.currentCategoryObj.categoryloc)
      }
 
+    handleDelete = () => {
+        this.props.deleteBookmark(this.props.id, this.props.bookmarkIndex)
+    } 
+
     render() {
     return (
     <div draggable onDragStart = {(e) => this.onDragStart(e, this.props.index)} onDragOver={(e)=>this.onDragOver(e)} onDrop={(e)=>{this.onDrop(e, this.props.index)}} className="bookmark-element" >
@@ -31,7 +35,7 @@ export default class Bookmark extends Component {
                     <button className="edit-btn">Edit</button>
                 </div>
                 <div>
-                    <button className="delete-btn">Delete</button>
+                    <button className="delete-btn" onClick={() => this.handleDelete()}>Delete</button>
                 </div>
             </div>
         </div>

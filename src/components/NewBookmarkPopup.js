@@ -25,11 +25,13 @@ export default class NewBookmarkPopup extends Component {
     }
 
     handleBookmarkSubmit() {
-        this.props.createBookmark(this.state.title,this.state.about,this.state.link,this.props.currentCategoryObj.id,this.props.currentOrderID)     
+        this.props.createBookmark(this.state.title,this.state.about,this.state.link,this.props.currentCategory,this.props.currentOrderID)  
+        .then(() => this.props.updateCategory(this.props.currentCategoryObj.id,this.props.currentCategoryObj.name,this.props.currentCategoryObj.children,this.props.currentCategoryObj.bookmarkorder,this.props.currentCategoryObj.order,this.props.currentCategoryObj.categoryloc) )   
     }
 
     handleCategorySubmit() {
         this.props.createCategory(this.state.title,this.props.currentCategory,[],[],[],[],this.props.currentOrderID)
+        .then(() => this.props.updateCategory(this.props.currentCategoryObj.id,this.props.currentCategoryObj.name,this.props.currentCategoryObj.children,this.props.currentCategoryObj.bookmarkorder,this.props.currentCategoryObj.order,this.props.currentCategoryObj.categoryloc) )
     }
 
     handleBookmarkClick() {
@@ -46,12 +48,12 @@ export default class NewBookmarkPopup extends Component {
         document.addEventListener('mousedown', this.handleClickOutside);
     }
 
-    componentDidUpdate() {
-        if (this.props.justCreatedBookmark) {
-            this.props.updateCategory(this.props.currentCategoryObj.id,this.props.currentCategoryObj.name,this.props.currentCategoryObj.children,this.props.currentCategoryObj.bookmarkorder,this.props.currentCategoryObj.order,this.props.currentCategoryObj.categoryloc)
-            this.props.justCreatedBookmarkFunc(false)
-        }
-    }
+    // componentDidUpdate() {
+    //     if (this.props.justCreatedBookmark) {
+    //         this.props.updateCategory(this.props.currentCategoryObj.id,this.props.currentCategoryObj.name,this.props.currentCategoryObj.children,this.props.currentCategoryObj.bookmarkorder,this.props.currentCategoryObj.order,this.props.currentCategoryObj.categoryloc)
+    //         this.props.justCreatedBookmarkFunc(false)
+    //     }
+    // }
 
     componentWillUnmount() {
         document.removeEventListener('mousedown', this.handleClickOutside);

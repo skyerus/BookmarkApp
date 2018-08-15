@@ -24,7 +24,7 @@ export default class WelcomePage extends Component {
         if (this.props.justSignedUp) {
             modal = <Modal title="Your account has been created, welcome " mystyle="signed-in-modal">
                 <h1 className="username-border">{this.props.username}</h1>
-                <p>Start creating bookmarks</p>
+                <p className="modal-p">Start creating bookmarks</p>
                 <div className="signup-buttons">
                     <NavLink to="/bookmarks">
                         <button className="btn btn-dark btn-lg login-btn" onClick={() => this.handleSubmit()}>
@@ -36,7 +36,7 @@ export default class WelcomePage extends Component {
         } else {
             modal = <Modal title="Welcome back " mystyle="signed-in-modal">
                 <h1 className="username-border">{this.props.username}</h1>
-                <p>Access your bookmarks</p>
+                <p className="modal-p">Access your bookmarks</p>
                 <div>
                     <NavLink to="/bookmarks">
                         <button className="btn btn-dark btn-lg login-btn">

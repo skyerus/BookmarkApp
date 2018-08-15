@@ -1,9 +1,10 @@
-import { SIGNUP_HAS_ERRORED, SIGNUP_IS_LOADING, JUST_SIGNED_UP} from '../actions/types';
+import { SIGNUP_HAS_ERRORED, SIGNUP_IS_LOADING, JUST_SIGNED_UP, USER_ALREADY_EXISTS} from '../actions/types';
 
 const initialState = {
     signUpHasErrored: false,
     signUpIsLoading: false,
-    justSignedUp: false
+    justSignedUp: false,
+    userAlreadyExists: false
 }
 
 export default function(state=initialState, action){
@@ -28,6 +29,12 @@ export default function(state=initialState, action){
             return {
                 ...state,
                 justSignedUp: action.justSignedUp
+            }
+
+        case USER_ALREADY_EXISTS:
+            return {
+                ...state,
+                userAlreadyExists: action.hasErrored
             }
     }
 }

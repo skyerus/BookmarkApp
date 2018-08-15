@@ -1,7 +1,18 @@
-import { LOGIN_HAS_EXPIRED,LOGIN_HAS_ERRORED,LOGIN_IS_LOADING, LOGIN_SUCCESS,LOGOUT_HAS_ERRORED,LOGOUT_IS_LOADING,LOGOUT_SUCCESS, SIGNUP_HAS_ERRORED, SIGNUP_IS_LOADING, JUST_SIGNED_UP, ADD_USER_ID, INIT_STATE, HYDRATE_CATEGORIES_IS_LOADING, HYDRATE_BOOKMARKS_IS_LOADING, HYDRATE_CATEGORIES_STATE, HYDRATE_BOOKMARKS_STATE, HYDRATE_CATEGORIES_HAS_ERRORED, HYDRATE_BOOKMARKS_HAS_ERRORED, UPDATE_CURRENT_ORDER_ID} from './types';
+import { LOGIN_HAS_EXPIRED,LOGIN_HAS_ERRORED,LOGIN_IS_LOADING, LOGIN_SUCCESS,LOGOUT_HAS_ERRORED,LOGOUT_IS_LOADING,LOGOUT_SUCCESS, SIGNUP_HAS_ERRORED, SIGNUP_IS_LOADING, JUST_SIGNED_UP, ADD_USER_ID, INIT_STATE, HYDRATE_CATEGORIES_IS_LOADING, HYDRATE_BOOKMARKS_IS_LOADING, HYDRATE_CATEGORIES_STATE, HYDRATE_BOOKMARKS_STATE, HYDRATE_CATEGORIES_HAS_ERRORED, HYDRATE_BOOKMARKS_HAS_ERRORED, UPDATE_CURRENT_ORDER_ID, USER_ALREADY_EXISTS, INCORRECT_PASSWORD, USER_NO_EXISTS} from './types';
 import { updateCurrentCategory } from './bookmarksActions';
 
-export function loginHasErrored(bool) {
+export function loginHasErroredFunc(bool,code) {
+    if (code===404) {
+        return {
+            type: USER_NO_EXISTS,
+            loginHasErrored: bool
+        }
+    } else if (code===403) {
+        return {
+            type: INCORRECT_PASSWORD,
+            loginHasErrored: bool
+        }
+    }
     return {
         type: LOGIN_HAS_ERRORED,
         loginHasErrored: bool
@@ -45,7 +56,7 @@ export function login(u,pw) {
             .then((response) => {
                 if (!response.ok) {
                     dispatch(loginIsLoading(false));
-                    throw Error(response.statusText);
+                    throw response.status;
                 }
                 dispatch(loginIsLoading(false));
                 return response.json();
@@ -55,7 +66,7 @@ export function login(u,pw) {
             .then((response) => {dispatch(initState());return response})
             .then(() => {dispatch(hydrateCategories());dispatch(hydrateBookmarks())})
             .then(() => dispatch(updateCurrentOrderID()))
-            .catch(() => dispatch(loginHasErrored(true)))
+            .catch((response) => dispatch(loginHasErroredFunc(true, response)))
         
     }
 }
@@ -101,11 +112,19 @@ export function logout() {
             .then(()=>dispatch(updateCurrentCategory(0)))
             .then(()=>{
                 dispatch(logoutSuccess());
-            }).catch(()=> dispatch(logoutHasErrored(true)))
+            })
+            .then(() => dispatch(addUserID(0)))
+            .catch(()=> dispatch(logoutHasErrored(true)))
     }
 }
 
-export function signUpHasErrored(bool) {
+export function signUpHasErroredFunc(bool, response) {
+    if (response===409) {
+        return {
+            type: USER_ALREADY_EXISTS,
+            hasErrored: bool
+        }; 
+    }
     return {
         type: SIGNUP_HAS_ERRORED,
         hasErrored: bool
@@ -155,17 +174,18 @@ export function signUp(u,em,pw) {
             password:pw
         })})
         .then((response) => {
-            if (!response.ok){
-                throw Error(response.statusText);
-            }
             dispatch(signUpIsLoading(false));
+            if (!response.ok){
+                throw response.status;
+            }
             dispatch(toggleJustSignedUp(true));
             return response.json();
         })
         .then((response)=> {dispatch(loginSuccess(u)); return response})
         .then((response)=> dispatch(addUserID(response.id)))
         .then(() => dispatch(initState()))
-        .catch(()=>dispatch(signUpHasErrored(true)));
+        .then(()=>dispatch(signUpHasErroredFunc(false,409)))
+        .catch((response)=>dispatch(signUpHasErroredFunc(true,response)));
     }
 }
 

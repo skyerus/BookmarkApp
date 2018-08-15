@@ -4,22 +4,38 @@ import Bookmark from './Bookmark';
 import AddBookmark from './AddBookmark';
 import Category from './Category';
 
+import settings from '../img/settings.svg'
+
 export default class Bookmarks extends Component {
+    handleDeleteCategory() {
+        this.props.deleteCategory(this.props.currentCategoryObj.id, this.props.currentCategory)
+        .then(() => {
+            for(let i=this.props.currentCategory; i< this.props.categories[this.props.userID].length; i++) {
+                this.props.updateCategory(this.props.categories[this.props.userID][i].id,this.props.categories[this.props.userID][i].name,this.props.categories[this.props.userID][i].children,this.props.categories[this.props.userID][i].bookmarkorder,this.props.categories[this.props.userID][i].order,this.props.categories[this.props.userID][i].categoryloc)
+            }
+        })
+    }
+
   render() {
+      let bookmarkIndex = -1;
       let bookmarksCategories = this.props.order.map((order,index) => {
           if(this.props.categoryloc[index]===0) {
             let bookmarkID = this.props.bookmarkOrder[order]
+            bookmarkIndex += bookmarkIndex;
             return (
                 <Bookmark 
                     edit={this.props.edit} 
+                    id = {this.props.bookmarks[this.props.userID][bookmarkID].id} 
                     key={this.props.bookmarks[this.props.userID][bookmarkID].orderid} 
                     name= {this.props.bookmarks[this.props.userID][bookmarkID].title} 
                     about= {this.props.bookmarks[this.props.userID][bookmarkID].about}
                     link={this.props.bookmarks[this.props.userID][bookmarkID].link} 
                     reorderBookmarks={this.props.reorderBookmarks} 
+                    bookmarkIndex={bookmarkIndex}
                     index={index}
                     updateCategory={this.props.updateCategory}
                     currentCategoryObj = {this.props.currentCategoryObj}
+                    deleteBookmark = {this.props.deleteBookmark}
                 />)
         } else {
             let categoryID = this.props.children[order]
@@ -48,13 +64,21 @@ export default class Bookmarks extends Component {
         goback=""
         title = <div className="title-grid-element-wo-back"><h1 className="padding-top-h1">Home</h1></div>
     }
+    let edit;
+    let deleteCategory;
+    if (this.props.editBool && this.props.currentCategory!==0) {
+        edit = <div className="edit-grid-btn"><button className="btn btn-dark">Edit</button></div>
+        deleteCategory = <div className="edit-grid-btn"><button className="btn btn-danger" onClick={() => this.handleDeleteCategory()}>Delete</button></div>
+    }
 
     return (
         <div className="my-container min-height my-modal bookmarks-modal not-hidden">
             <div className="bookmark-header-container">
                 {goback}
                 {title}
-                <div className="edit-grid-btn"><button className="btn btn-dark" onClick={this.props.toggleEdit}>Edit</button></div>
+                {edit}
+                {deleteCategory}
+                <div className="edit-grid-btn"><button className="settings-btn" onClick={this.props.toggleEdit}><img className="settings-icon" src={settings} alt="Settings"/></button></div>
             </div>
             <div className="bookmark-grid">
                 <AddBookmark toggleNewBookmarkPopup={this.props.toggleNewBookmarkPopup}/>

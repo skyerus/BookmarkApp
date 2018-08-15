@@ -1,4 +1,4 @@
-import {REORDER_BOOKMARKS, TOGGLE_EDIT, NEW_BOOKMARK_POPUP,CREATE_BOOKMARK_HAS_ERRORED, CREATE_BOOKMARK_IS_LOADING, CREATE_BOOKMARK_SUCCESS,CREATE_CATEGORY_HAS_ERRORED,CREATE_CATEGORY_IS_LOADING,CREATE_CATEGORY_SUCCESS,UPDATE_CATEGORY_HAS_ERRORED,UPDATE_CATEGORY_IS_LOADING, JUST_CREATED_BOOKMARK, JUST_CREATED_CATEGORY, TOGGLE_BOOKMARK_FORM, TOGGLE_CATEGORY_FORM, UPDATE_CURRENT_CATEGORY, GO_BACK} from './types';
+import {REORDER_BOOKMARKS, TOGGLE_EDIT, NEW_BOOKMARK_POPUP,CREATE_BOOKMARK_HAS_ERRORED, CREATE_BOOKMARK_IS_LOADING, CREATE_BOOKMARK_SUCCESS,CREATE_CATEGORY_HAS_ERRORED,CREATE_CATEGORY_IS_LOADING,CREATE_CATEGORY_SUCCESS,UPDATE_CATEGORY_HAS_ERRORED,UPDATE_CATEGORY_IS_LOADING, JUST_CREATED_BOOKMARK, JUST_CREATED_CATEGORY, TOGGLE_BOOKMARK_FORM, TOGGLE_CATEGORY_FORM, UPDATE_CURRENT_CATEGORY, GO_BACK, DELETE_CATEGORY_HAS_ERRORED,REMOVE_CATEGORY_FROM_STATE, DELETE_BOOKMARK_HAS_ERRORED, REMOVE_BOOKMARK_FROM_STATE} from './types';
 import { updateCurrentOrderID } from './loginSignUpActions';
 
 export const reorderBookmarks = (newIndex,receivedIndex) => dispatch => {
@@ -49,8 +49,8 @@ export function justCreatedBookmarkFunc(bool) {
     }
 }
 
-export function createBookmark(title,about,link,category,orderid) {
-    return (dispatch) => {
+export const createBookmark = (title,about,link,category,orderid) => (dispatch) => 
+    new Promise(function(resolve,reject) {
         dispatch(createBookmarkIsLoading(true));
         fetch('http://localhost:8080/api/user/bookmark', {
             method:'POST',
@@ -69,6 +69,7 @@ export function createBookmark(title,about,link,category,orderid) {
             .then((response)=>{
                 if (!response.ok) {
                     dispatch(createBookmarkIsLoading(false));
+                    reject();
                     throw Error(response.statusText)
                 }
                 dispatch(createBookmarkIsLoading(false));
@@ -77,9 +78,10 @@ export function createBookmark(title,about,link,category,orderid) {
             })
             .then((bookmarkjson)=> dispatch(createBookmarkSuccess(bookmarkjson)))
             .then(()=> dispatch(justCreatedBookmarkFunc(true)))
+            .then(() => resolve())
             .catch(() => dispatch(createBookmarkHasErrored(true)));
-    }
-}
+    })
+
 
 export function createCategoryHasErrored(bool,e) {
     return {
@@ -109,8 +111,8 @@ export function justCreatedCategoryFunc(bool) {
     }
 }
 
-export function createCategory(name,parent,children,bookmarkorder,categoryloc,order,orderid) {
-    return (dispatch) => {
+export const createCategory = (name,parent,children,bookmarkorder,categoryloc,order,orderid) => (dispatch) => 
+    new Promise(function(resolve,reject){
         dispatch(createCategoryIsLoading(true));
         fetch('http://localhost:8080/api/user/category', {
             method:'POST',
@@ -131,6 +133,7 @@ export function createCategory(name,parent,children,bookmarkorder,categoryloc,or
             .then((response)=>{
                 if (!response.ok) {
                     dispatch(createCategoryIsLoading(false));
+                    reject();
                     throw Error(response.statusText);
                 }
                 dispatch(createCategoryIsLoading(false));
@@ -139,9 +142,9 @@ export function createCategory(name,parent,children,bookmarkorder,categoryloc,or
             })
             .then((categoryjson) => dispatch(createCategorySuccess(categoryjson)))
             .then(()=> dispatch(justCreatedCategoryFunc(true)))
+            .then(() => resolve())
             .catch((e) => dispatch(createCategoryHasErrored(true,e)));
-    }
-}
+    })
 
 export function updateCategoryHasErrored(bool) {
     return {
@@ -255,3 +258,79 @@ export function goBackAction() {
     }
 }
 
+export function deleteCategoryHasErrored() {
+    return {
+        type: DELETE_CATEGORY_HAS_ERRORED
+    }
+}
+
+export function removeCategoryFromState(id) {
+    return {
+        type: REMOVE_CATEGORY_FROM_STATE,
+        id
+    }
+}
+
+export const deleteCategory = (id, categoryIndex) => (dispatch) =>
+        new Promise(function(resolve,reject) {
+            fetch('http://localhost:8080/api/user/category', {
+            method:'DELETE',
+            headers: {
+                'Content-Type':'application/json'
+            },
+            mode:"cors",
+            credentials:"include",
+            body: JSON.stringify({
+                id
+            })})
+            .then((response)=>{
+                if (!response.ok) {
+                    console.log(response.status)
+                    console.log("Error")
+                    reject();
+                    throw Error(response.statusText)
+                }
+            })
+            .then(() => dispatch(removeCategoryFromState(categoryIndex)))
+            .then( () => resolve())
+            .catch(() => {dispatch(deleteCategoryHasErrored(true))});
+        })
+
+
+export function deleteBookmarkHasErrored() {
+    return {
+        type: DELETE_BOOKMARK_HAS_ERRORED
+    }
+}
+
+export function removeBookmarkFromState(id) {
+    return {
+        type: REMOVE_BOOKMARK_FROM_STATE,
+        id
+    }
+}
+
+export const deleteBookmark = (id, bookmarkIndex) => (dispatch) =>
+        new Promise(function(resolve,reject) {
+            fetch('http://localhost:8080/api/user/bookmark', {
+            method:'DELETE',
+            headers: {
+                'Content-Type':'application/json'
+            },
+            mode:"cors",
+            credentials:"include",
+            body: JSON.stringify({
+                id
+            })})
+            .then((response)=>{
+                if (!response.ok) {
+                    console.log(response.status)
+                    console.log("Error")
+                    reject();
+                    throw Error(response.statusText)
+                }
+            })
+            .then(() => dispatch(removeBookmarkFromState(bookmarkIndex)))
+            .then( () => resolve())
+            .catch(() => {dispatch(deleteBookmarkHasErrored(true))});
+        })

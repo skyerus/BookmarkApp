@@ -3,7 +3,8 @@ import React, { Component } from 'react'
 import  {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {reorderBookmarks,toggleEdit,toggleNewBookmarkPopup,createBookmark,updateCategory,justCreatedBookmarkFunc,justCreatedCategoryFunc, toggleBookmarkForm, toggleCategoryForm, createCategory, changeCategory, goBack} from '../actions/bookmarksActions';
+import {reorderBookmarks,toggleEdit,toggleNewBookmarkPopup,createBookmark,updateCategory,justCreatedBookmarkFunc,justCreatedCategoryFunc, toggleBookmarkForm, toggleCategoryForm, createCategory, changeCategory, goBack, deleteCategory, deleteBookmark} from '../actions/bookmarksActions';
+import {loginHasExpired, addUserID} from '../actions/loginSignUpActions';
 
 import Navbar from '../containers/Navbar';
 import Bookmarks from '../components/Bookmarks';
@@ -11,6 +12,14 @@ import NewBookmarkPopup from '../components/NewBookmarkPopup';
 
 
 class Home extends Component {
+
+  componentDidMount() {
+    if (this.props.isLoggedIn && document.cookie.length === 0) {
+      this.props.loginHasExpired()
+      this.props.addUserID(0)
+    }
+  }
+
   renderMainComponent() {
     if (!this.props.newBookmarkPopup) {
       return (
@@ -31,6 +40,9 @@ class Home extends Component {
           goBack={this.props.goBack}
           currentCategory={this.props.currentCategory}
           updateCategory={this.props.updateCategory}
+          editBool = {this.props.editBool}
+          deleteCategory = {this.props.deleteCategory}
+          deleteBookmark = {this.props.deleteBookmark}
         />)
     } else {
       return (
@@ -89,7 +101,11 @@ Home.propTypes = {
   createCategory: PropTypes.func.isRequired,
   userID: PropTypes.number,
   changeCategory: PropTypes.func.isRequired,
-  goBack: PropTypes.func.isRequired
+  goBack: PropTypes.func.isRequired,
+  editBool: PropTypes.bool,
+  deleteCategory: PropTypes.func.isRequired,
+  history : PropTypes.array,
+  deleteBookmark: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
@@ -105,7 +121,9 @@ const mapStateToProps = state => ({
   justCreatedCategory: state.Bookmarks.justCreatedCategory,
   addBookmark: state.Bookmarks.addBookmark,
   addCategory: state.Bookmarks.addCategory,
-  userID: state.Bookmarks.userID
+  userID: state.Bookmarks.userID,
+  editBool: state.Bookmarks.editBool,
+  history: state.Bookmarks.history
 })
 
-export default connect(mapStateToProps,{reorderBookmarks,toggleEdit,toggleNewBookmarkPopup,createBookmark,updateCategory,justCreatedBookmarkFunc,justCreatedCategoryFunc, toggleBookmarkForm,toggleCategoryForm, createCategory, changeCategory, goBack})(Home)
+export default connect(mapStateToProps,{reorderBookmarks,toggleEdit,toggleNewBookmarkPopup,createBookmark,updateCategory,justCreatedBookmarkFunc,justCreatedCategoryFunc, toggleBookmarkForm,toggleCategoryForm, createCategory, changeCategory, goBack,loginHasExpired, addUserID, deleteCategory, deleteBookmark})(Home)

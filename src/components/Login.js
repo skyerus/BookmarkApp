@@ -7,7 +7,8 @@ class Login extends Component {
     super(props);
     this.state = {
       username: "",
-      password: ""
+      password: "",
+      missingFields: false
     };
 
     this.onChange = this.onChange.bind(this);
@@ -21,8 +22,16 @@ class Login extends Component {
   }
 
   handleSubmit(e) {
+    this.setState({missingFields:false})
+    this.props.loginHasErroredFunc(false, 403)
+    this.props.loginHasErroredFunc(false, 404)
     e.preventDefault();
-    this.props.login(this.state.username,this.state.password)
+    if (this.state.password!=="" && this.state.username!=="") {
+      this.props.login(this.state.username,this.state.password)
+    }
+    if (this.state.password==="" || this.state.username==="") {
+      this.setState({missingFields:true})
+    }
   }
 
   componentDidMount() {
@@ -30,6 +39,8 @@ class Login extends Component {
   }
 
   componentWillUnmount() {
+    this.props.loginHasErroredFunc(false, 403)
+    this.props.loginHasErroredFunc(false, 404)
     document.removeEventListener('mousedown', this.handleClickOutside);
   }
 
@@ -44,6 +55,17 @@ class Login extends Component {
   }
 
   render() {
+    let error;
+    let loginError;
+    if (this.state.missingFields) {
+      error = <p className="red-text">Please fill out all fields</p>
+    }
+    if (this.props.userNoExists) {
+      loginError = <p className="red-text">Could not find an account with that username</p>
+    }
+    if (this.props.incorrectPassword) {
+      loginError = <p className="red-text">Incorrect password</p>
+    }
     return (
       <div className= "not-hidden">
         <div className="my-modal form-modal" ref={this.setWrapperRef}>
@@ -56,6 +78,8 @@ class Login extends Component {
             <div className="form-group">
               <label>Password:</label>
               <input className= "form-control" name= "password" type="password" onChange={this.onChange} value={this.state.password}/>
+              {error}
+              {loginError}
             </div>
           </form>
           <div className="align-center">

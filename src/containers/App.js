@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import {Redirect} from 'react-router-dom';
 
 import {togglePopupSignup, togglePopupLogin} from '../actions/loginSignupModalActions';
-import {login, signUp, toggleJustSignedUp, loginHasExpired} from '../actions/loginSignUpActions';
+import {login, signUp, toggleJustSignedUp, loginHasExpired,signUpHasErroredFunc, loginHasErroredFunc, addUserID} from '../actions/loginSignUpActions';
 import {createCategory} from '../actions/bookmarksActions';
 
 import Signup from '../components/Signup';
@@ -19,6 +19,7 @@ class App extends Component {
   componentDidMount() {
     if (this.props.isLoggedIn && document.cookie.length === 0) {
       this.props.loginHasExpired()
+      this.props.addUserID(0)
     }
   }
   
@@ -56,6 +57,8 @@ class App extends Component {
         signUp={this.props.signUp} 
         signuppopup={this.props.signupPopup}  
         togglePopupSignup={this.props.togglePopupSignup}
+        userAlreadyExists = {this.props.userAlreadyExists}
+        signUpHasErroredFunc = {this.props.signUpHasErroredFunc}
       />
     } else {
       welcome =
@@ -66,6 +69,9 @@ class App extends Component {
         loginpopup={this.props.loginPopup} 
         togglePopupLogin={this.props.togglePopupLogin}
         loginIsLoading={this.props.loginIsLoading}
+        userNoExists={this.props.userNoExists}
+        incorrectPassword= {this.props.incorrectPassword}
+        loginHasErroredFunc={this.props.loginHasErroredFunc}
       />
 
     }
@@ -96,7 +102,13 @@ App.propTypes = {
   toggleJustSignedUp: PropTypes.func.isRequired,
   justSignedUp: PropTypes.bool,
   justLoggedIn: PropTypes.bool,
-  loginHasExpired: PropTypes.func.isRequired
+  loginHasExpired: PropTypes.func.isRequired,
+  userAlreadyExists: PropTypes.bool,
+  signUpHasErroredFunc: PropTypes.func.isRequired,
+  loginHasErroredFunc: PropTypes.func.isRequired,
+  userNoExists: PropTypes.bool,
+  incorrectPassword: PropTypes.bool,
+  addUserID: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
@@ -109,8 +121,11 @@ const mapStateToProps = state => ({
   loginIsLoading: state.Login.loginIsLoading,
   signUpHasErrored: state.SignUp.signUpHasErrored,
   signUpIsLoading: state.SignUp.signUpIsLoading,
-  justSignedUp: state.SignUp.justSignedUp
+  justSignedUp: state.SignUp.justSignedUp,
+  userAlreadyExists: state.SignUp.userAlreadyExists,
+  userNoExists: state.Login.userNoExists,
+  incorrectPassword: state.Login.incorrectPassword
 })
 
-export default connect(mapStateToProps, {togglePopupSignup, togglePopupLogin, login, signUp, toggleJustSignedUp, loginHasExpired,createCategory})(App);
+export default connect(mapStateToProps, {togglePopupSignup, togglePopupLogin, login, signUp, toggleJustSignedUp, loginHasExpired,createCategory, signUpHasErroredFunc, loginHasErroredFunc, addUserID})(App);
 
