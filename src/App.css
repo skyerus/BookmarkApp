@@ -70,11 +70,6 @@ button:focus {outline:0;}
   top: 15vh;
 }
 
-.my-modal p {
-  font-size: 20px;
-  margin-top: 3vh;
-}
-
 .my-modal h1 {
   margin-top: 2vh;
 }
@@ -232,6 +227,13 @@ button:focus {outline:0;}
   width: 100%;
   border: 0;
   padding: 0.5vh 0;
+}
+
+.settings-btn {
+  background-color: rgb(52, 120, 245);
+  border-radius: 50%;
+  border: 0;
+  padding: 0.6vh 0.6vh;
 }
 
 .bookmk-btn {
@@ -412,4 +414,22 @@ button:focus {outline:0;}
   color: #fff;
   font-size: 1.5vw;
   overflow: hidden;
+}
+
+.red-text {
+  color: rgb(221, 21, 21);
+  padding: 0;
+  margin: 0;
+  margin-top: 0.3vh;
+  font-size: 1.4vh;
+}
+
+.modal-p {
+  font-size: 20px;
+  margin-top: 3vh;
+}
+
+.settings-icon {
+  height: 3vh;
+  color: #fff;
 }
