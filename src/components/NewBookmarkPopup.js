@@ -93,7 +93,7 @@ export default class NewBookmarkPopup extends Component {
                             </div>
                         </form>
                         <div className="align-center">
-                            <MyButton myStyle="btn btn-primary btn-lg fixed-size" text="Create" onClick={this.handleBookmarkSubmit}/>
+                            <MyButton myStyle="btn btn-primary btn-lg fixed-size" text="Create" onClick={this.handleBookmarkSubmit} isLoading={this.props.createBookmarkIsLoading}/>
                         </div>
                     </div>
         } else if (this.props.addCategory) {
@@ -110,7 +110,7 @@ export default class NewBookmarkPopup extends Component {
                             </div>
                         </form>
                         <div className="align-center">
-                            <MyButton myStyle="btn btn-primary btn-lg fixed-size" text="Create" onClick={this.handleCategorySubmit}/>
+                            <MyButton myStyle="btn btn-primary btn-lg fixed-size" text="Create" onClick={this.handleCategorySubmit} isLoading={this.props.createCategoryIsLoading}/>
                         </div>
                     </div>
         }

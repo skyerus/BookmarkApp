@@ -22,8 +22,8 @@ export default class Category extends Component {
     render() {
     return (
     <div onClick={()=>this.handleClick()} draggable onDragStart = {(e) => this.onDragStart(e, this.props.index)} onDragOver={(e)=>this.onDragOver(e)} onDrop={(e)=>{this.onDrop(e, this.props.index)}} className="flex-wrap">
-        <div className="category">
-            {this.props.name}
+        <div className="category-flex-container">
+            <div className="category-title">{this.props.name}</div>
         </div>
     </div>
     )

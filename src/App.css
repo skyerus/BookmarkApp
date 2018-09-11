@@ -163,7 +163,7 @@ button:focus {outline:0;}
   grid-gap: 1vh 1vh;
   gap: 1vh 1vh;
   margin-top: 1vh;
-  /* grid-auto-rows: minmax(17vh, auto); */
+  grid-auto-rows: minmax(17vh, auto);
 }
 
 .bookmark-element {
@@ -402,7 +402,7 @@ button:focus {outline:0;}
   display: block;
 }
 
-.category {
+/* .category {
   position: relative;
   display: inline-block;
   width: 70%;
@@ -411,6 +411,19 @@ button:focus {outline:0;}
   border-radius: 50%;
   background-color: #428bca;
   line-height: 0;
+  color: #fff;
+  font-size: 1.5vw;
+  overflow: hidden;
+} */
+
+.category-flex-container {
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  border-radius: 5px;
+  background-color: #428bca;
   color: #fff;
   font-size: 1.5vw;
   overflow: hidden;
@@ -433,3 +446,122 @@ button:focus {outline:0;}
   height: 3vh;
   color: #fff;
 }
+
+@media only screen and (max-width : 1000px) {
+  .my-container {
+    width: 87%;
+  }
+
+  .padding-top-h1 {
+    font-size: 30px;
+  }
+
+  .signup-nav-item {
+    grid-column: 7;
+  }
+
+  .login-signup-modal {
+    width: 50%;
+  }
+
+  .form-modal {
+    width: 55%;
+    top: 3vh;
+  }
+
+  .signed-in-modal {
+    width: 55%;
+  }
+
+  .fixed-size {
+    width: 20vh;
+    height: 6vh;
+    padding: 0px;
+  }
+
+  .title-grid-element {
+    overflow: hidden;
+  }
+
+  .category-title {
+    font-size: 25px;
+  }
+
+}
+
+@media only screen and (max-width : 600px) {
+  .my-container {
+    width: 87%;
+  }
+
+  .bookmarks-nav-item {
+    grid-column: 3;
+  }
+
+  .padding-top-h1 {
+    font-size: 25px;
+  }
+
+  .signup-nav-item {
+    grid-column: 6;
+  }
+
+  .login-signup-modal {
+    width: 87%;
+  }
+
+  .form-modal {
+    width: 87%;
+    top: 3vh;
+  }
+
+  .signed-in-modal {
+    width: 87%;
+  }
+
+  .fixed-size {
+    width: 20vh;
+    height: 6vh;
+    padding: 0px;
+  }
+
+  .bookmark-grid {
+    display: block;
+    /* grid-template-columns: 1fr;
+    grid-auto-rows: minmax(20vh, auto); */
+    margin: 1.5vh 0;
+  }
+
+  .plus-img {
+    height: 15vh;
+  }
+
+  .plus-bookmark-element {
+    height: 50%;
+  }
+
+  .bookmark-element {
+    height: 15vh;
+    margin: 1vh 0;
+    overflow: hidden;
+  }
+  
+  .category-flex-container {
+    height: 15vh;
+    font-size: 20px;
+    margin: 1vh 0;
+  }
+
+  .btn-small {
+    width: 50px;
+    padding: 0;
+    font-size: 15px;
+  }
+
+  .title-grid-element {
+    overflow: hidden;
+  }
+
+}
+
+

@@ -3,12 +3,14 @@ import React, { Component } from 'react'
 import  {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {reorderBookmarks,toggleEdit,toggleNewBookmarkPopup,createBookmark,updateCategory,justCreatedBookmarkFunc,justCreatedCategoryFunc, toggleBookmarkForm, toggleCategoryForm, createCategory, changeCategory, goBack, deleteCategory, deleteBookmark} from '../actions/bookmarksActions';
+import {reorderBookmarks,toggleEdit,toggleNewBookmarkPopup,createBookmark,updateCategory,justCreatedBookmarkFunc,justCreatedCategoryFunc, toggleBookmarkForm, toggleCategoryForm, createCategory, changeCategory, goBack, deleteCategory, deleteBookmark, bookmarkJustDeleted,toggleEditBookmark,toggleEditCategory, updateCategoryInfo, updateBookmarkInfo, updateBookmark} from '../actions/bookmarksActions';
 import {loginHasExpired, addUserID} from '../actions/loginSignUpActions';
 
 import Navbar from '../containers/Navbar';
 import Bookmarks from '../components/Bookmarks';
 import NewBookmarkPopup from '../components/NewBookmarkPopup';
+import EditCategory from '../components/EditCategory';
+import EditBookmark from '../components/EditBookmark';
 
 
 class Home extends Component {
@@ -21,7 +23,7 @@ class Home extends Component {
   }
 
   renderMainComponent() {
-    if (!this.props.newBookmarkPopup) {
+    if (!this.props.newBookmarkPopup && !this.props.editBookmark && !this.props.editCategory) {
       return (
         <Bookmarks 
           edit = {this.props.edit} 
@@ -43,8 +45,13 @@ class Home extends Component {
           editBool = {this.props.editBool}
           deleteCategory = {this.props.deleteCategory}
           deleteBookmark = {this.props.deleteBookmark}
+          bookmarkJustDeleted = {this.props.bookmarkJustDeleted}
+          bookmarkWasJustDeleted = {this.props.bookmarkWasJustDeleted}
+          toggleEditBookmark= {this.props.toggleEditBookmark}
+          toggleEditCategory={this.props.toggleEditCategory}
+          editBookmark = {this.props.editBookmark}
         />)
-    } else {
+    } else if (this.props.newBookmarkPopup) {
       return (
       <NewBookmarkPopup
         toggleNewBookmarkPopup={this.props.toggleNewBookmarkPopup}
@@ -63,7 +70,28 @@ class Home extends Component {
         toggleBookmarkForm = {this.props.toggleBookmarkForm}
         toggleCategoryForm={this.props.toggleCategoryForm}
         createCategory = {this.props.createCategory}
+        createCategoryIsLoading = {this.props.createCategoryIsLoading}
+        createBookmarkIsLoading = {this.props.createBookmarkIsLoading}
       />)
+    } else if (this.props.editCategory) {
+      return (
+        <EditCategory
+          currentCategoryObj = {this.props.categories[this.props.userID][this.props.currentCategory]}
+          updateCategory = {this.props.updateCategory}
+          toggleEditCategory = {this.props.toggleEditCategory}
+          editCategory = {this.props.editCategory}
+          updateCategoryInfo = {this.props.updateCategoryInfo}
+        />)
+    } else if (this.props.editBookmark) {
+      return (
+        <EditBookmark 
+          bookmarkToEdit = {this.props.bookmarkToEdit}
+          updateBookmark = {this.props.updateBookmark}
+          updateBookmarkInfo = {this.props.updateBookmarkInfo}
+          toggleEditBookmark={this.props.toggleEditBookmark}
+          editBookmark = {this.props.editBookmark}
+        />
+      )
     }
   }
   render() {
@@ -105,7 +133,19 @@ Home.propTypes = {
   editBool: PropTypes.bool,
   deleteCategory: PropTypes.func.isRequired,
   history : PropTypes.array,
-  deleteBookmark: PropTypes.func.isRequired
+  deleteBookmark: PropTypes.func.isRequired,
+  bookmarkWasJustDeleted: PropTypes.bool,
+  bookmarkJustDeleted: PropTypes.func.isRequired,
+  toggleEditBookmark: PropTypes.func.isRequired,
+  toggleEditCategory: PropTypes.func.isRequired,
+  editBookmark: PropTypes.bool,
+  editCategory: PropTypes.bool,
+  updateBookmarkInfo: PropTypes.func.isRequired,
+  updateCategoryInfo: PropTypes.func.isRequired,
+  bookmarkToEdit: PropTypes.object,
+  updateBookmark: PropTypes.func.isRequired,
+  createBookmarkIsLoading: PropTypes.bool,
+  createCategoryIsLoading: PropTypes.bool
 }
 
 const mapStateToProps = state => ({
@@ -123,7 +163,13 @@ const mapStateToProps = state => ({
   addCategory: state.Bookmarks.addCategory,
   userID: state.Bookmarks.userID,
   editBool: state.Bookmarks.editBool,
-  history: state.Bookmarks.history
+  history: state.Bookmarks.history,
+  bookmarkWasJustDeleted: state.Bookmarks.bookmarkWasJustDeleted,
+  editBookmark: state.Bookmarks.editBookmark,
+  editCategory: state.Bookmarks.editCategory,
+  bookmarkToEdit: state.Bookmarks.bookmarkToEdit,
+  createBookmarkIsLoading: state.Bookmarks.createBookmarkIsLoading,
+  createCategoryIsLoading: state.Bookmarks.createCategoryIsLoading
 })
 
-export default connect(mapStateToProps,{reorderBookmarks,toggleEdit,toggleNewBookmarkPopup,createBookmark,updateCategory,justCreatedBookmarkFunc,justCreatedCategoryFunc, toggleBookmarkForm,toggleCategoryForm, createCategory, changeCategory, goBack,loginHasExpired, addUserID, deleteCategory, deleteBookmark})(Home)
+export default connect(mapStateToProps,{reorderBookmarks,toggleEdit,toggleNewBookmarkPopup,createBookmark,updateCategory,justCreatedBookmarkFunc,justCreatedCategoryFunc, toggleBookmarkForm,toggleCategoryForm, createCategory, changeCategory, goBack,loginHasExpired, addUserID, deleteCategory, deleteBookmark, bookmarkJustDeleted, toggleEditBookmark, toggleEditCategory, updateBookmarkInfo, updateCategoryInfo, updateBookmark})(Home)

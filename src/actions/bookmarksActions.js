@@ -1,4 +1,4 @@
-import {REORDER_BOOKMARKS, TOGGLE_EDIT, NEW_BOOKMARK_POPUP,CREATE_BOOKMARK_HAS_ERRORED, CREATE_BOOKMARK_IS_LOADING, CREATE_BOOKMARK_SUCCESS,CREATE_CATEGORY_HAS_ERRORED,CREATE_CATEGORY_IS_LOADING,CREATE_CATEGORY_SUCCESS,UPDATE_CATEGORY_HAS_ERRORED,UPDATE_CATEGORY_IS_LOADING, JUST_CREATED_BOOKMARK, JUST_CREATED_CATEGORY, TOGGLE_BOOKMARK_FORM, TOGGLE_CATEGORY_FORM, UPDATE_CURRENT_CATEGORY, GO_BACK, DELETE_CATEGORY_HAS_ERRORED,REMOVE_CATEGORY_FROM_STATE, DELETE_BOOKMARK_HAS_ERRORED, REMOVE_BOOKMARK_FROM_STATE} from './types';
+import {REORDER_BOOKMARKS, TOGGLE_EDIT, NEW_BOOKMARK_POPUP,CREATE_BOOKMARK_HAS_ERRORED, CREATE_BOOKMARK_IS_LOADING, CREATE_BOOKMARK_SUCCESS,CREATE_CATEGORY_HAS_ERRORED,CREATE_CATEGORY_IS_LOADING,CREATE_CATEGORY_SUCCESS,UPDATE_CATEGORY_HAS_ERRORED,UPDATE_CATEGORY_IS_LOADING, JUST_CREATED_BOOKMARK, JUST_CREATED_CATEGORY, TOGGLE_BOOKMARK_FORM, TOGGLE_CATEGORY_FORM, UPDATE_CURRENT_CATEGORY, GO_BACK, DELETE_CATEGORY_HAS_ERRORED,REMOVE_CATEGORY_FROM_STATE, DELETE_BOOKMARK_HAS_ERRORED, REMOVE_BOOKMARK_FROM_STATE, BOOKMARK_JUST_DELETED, TOGGLE_EDIT_CATEGORY, TOGGLE_EDIT_BOOKMARK, NEW_CATEGORY_INFO, NEW_BOOKMARK_INFO, UPDATE_BOOKMARK_HAS_ERRORED, UPDATE_BOOKMARK_IS_LOADING} from './types';
 import { updateCurrentOrderID } from './loginSignUpActions';
 
 export const reorderBookmarks = (newIndex,receivedIndex) => dispatch => {
@@ -78,6 +78,7 @@ export const createBookmark = (title,about,link,category,orderid) => (dispatch) 
             })
             .then((bookmarkjson)=> dispatch(createBookmarkSuccess(bookmarkjson)))
             .then(()=> dispatch(justCreatedBookmarkFunc(true)))
+            .then(() => dispatch(toggleNewBookmarkPopup(false)))
             .then(() => resolve())
             .catch(() => dispatch(createBookmarkHasErrored(true)));
     })
@@ -142,6 +143,7 @@ export const createCategory = (name,parent,children,bookmarkorder,categoryloc,or
             })
             .then((categoryjson) => dispatch(createCategorySuccess(categoryjson)))
             .then(()=> dispatch(justCreatedCategoryFunc(true)))
+            .then(() => dispatch(toggleNewBookmarkPopup(false)))
             .then(() => resolve())
             .catch((e) => dispatch(createCategoryHasErrored(true,e)));
     })
@@ -167,8 +169,8 @@ export function updateCategoryIsLoading(bool) {
 //     };
 // }
 
-export function updateCategory(id,name,children,bookmarkorder,order,categoryloc) {
-    return (dispatch) => {
+export const updateCategory = (id,name,children,bookmarkorder,order,categoryloc) => (dispatch) => 
+    new Promise(function(resolve,reject) {
         dispatch(updateCategoryIsLoading(true));
         fetch('http://localhost:8080/api/user/category', {
             method:'PUT',
@@ -188,6 +190,7 @@ export function updateCategory(id,name,children,bookmarkorder,order,categoryloc)
             .then((response)=>{
                 if (!response.ok) {
                     dispatch(updateCategoryIsLoading(false));
+                    reject();
                     throw Error(response.statusText)
                 }
                 dispatch(updateCategoryIsLoading(false));
@@ -195,9 +198,53 @@ export function updateCategory(id,name,children,bookmarkorder,order,categoryloc)
                 // return response.json();
             })
             // .then(() => dispatch(updateCategorySuccess(true)))
+            .then(() => dispatch(toggleEditCategory(false)))
+            .then(() => resolve())
             .catch(() => {dispatch(updateCategoryHasErrored(true))});
-    }
+    })
+
+export function updateBookmarkHasErrored(bool) {
+return {
+    type: UPDATE_BOOKMARK_HAS_ERRORED,
+    updateBookmarkHasErrored: bool
+};
 }
+
+export function updateBookmarkIsLoading(bool) {
+return {
+    type: UPDATE_BOOKMARK_IS_LOADING,
+    updateBookmarkIsLoading: bool
+};
+}
+
+export const updateBookmark = (id,title,about,link) => (dispatch) => 
+    new Promise(function(resolve,reject) {
+        dispatch(updateBookmarkIsLoading(true));
+        fetch('http://localhost:8080/api/user/bookmark', {
+            method:'PUT',
+            headers: {
+                'Content-Type':'application/json'
+            },
+            mode:"cors",
+            credentials:"include",
+            body: JSON.stringify({
+                id,
+                title,
+                about,
+                link
+            })})
+            .then((response)=>{
+                if (!response.ok) {
+                    dispatch(updateCategoryIsLoading(false));
+                    reject();
+                    throw Error(response.statusText)
+                }
+                dispatch(updateBookmarkIsLoading(false));
+            })
+            .then(() => dispatch(toggleEditBookmark(false, 0, "", "", "", 0)))
+            .then(() => resolve())
+            .catch(() => {dispatch(updateBookmarkHasErrored(true))});
+})
 
 export function toggleBookmarkForm(bool) {
     return {
@@ -310,6 +357,13 @@ export function removeBookmarkFromState(id) {
     }
 }
 
+export function bookmarkJustDeleted(bool) {
+    return {
+        type: BOOKMARK_JUST_DELETED,
+        bool
+    }
+}
+
 export const deleteBookmark = (id, bookmarkIndex) => (dispatch) =>
         new Promise(function(resolve,reject) {
             fetch('http://localhost:8080/api/user/bookmark', {
@@ -331,6 +385,43 @@ export const deleteBookmark = (id, bookmarkIndex) => (dispatch) =>
                 }
             })
             .then(() => dispatch(removeBookmarkFromState(bookmarkIndex)))
+            .then(() => dispatch(bookmarkJustDeleted(true)))
             .then( () => resolve())
             .catch(() => {dispatch(deleteBookmarkHasErrored(true))});
         })
+
+export function toggleEditCategory(bool) {
+    return {
+        type: TOGGLE_EDIT_CATEGORY,
+        bool
+    }
+}
+
+export function toggleEditBookmark(bool, id, title, about, link, index) {
+    return {
+        type: TOGGLE_EDIT_BOOKMARK,
+        bool,
+        id,
+        title,
+        about,
+        link,
+        index
+    }
+}
+
+export function updateCategoryInfo(name) {
+    return {
+        type: NEW_CATEGORY_INFO,
+        name
+    }
+}
+
+export function updateBookmarkInfo(title, about, link, index) {
+    return {
+        type: NEW_BOOKMARK_INFO,
+        title,
+        about,
+        link,
+        index
+    }
+}

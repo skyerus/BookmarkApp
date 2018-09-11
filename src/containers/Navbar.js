@@ -15,10 +15,10 @@ class Navbar extends Component  {
         <div className="nav-container">
             <div className="my-container">
                 <ul className="row-nav">
-                    <NavLink exact to="/" activeClassName="active-link" className="row-nav-item nav-item-1">
+                    <NavLink exact to="/" activeClassName="active-link" className="row-nav-item">
                         Home
                     </NavLink>
-                    <NavLink to="/bookmarks" activeClassName="active-link" className="row-nav-item">
+                    <NavLink to="/bookmarks" activeClassName="active-link" className="row-nav-item bookmarks-nav-item">
                         Bookmarks
                     </NavLink>
                     {this.props.isLoggedIn ? 
@@ -26,7 +26,7 @@ class Navbar extends Component  {
                         : !this.props.signupPopup ? 
                             <NavLink exact to="/" className="signup-nav-item row-nav-item">
                                 <div onClick={()=>this.props.togglePopupSignup(true)}>
-                                    Sign up
+                                    Signup
                                 </div>
                             </NavLink>
                             : null 
